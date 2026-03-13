@@ -1,239 +1,184 @@
-<div align="center">
+<p align="center">
+  <img src="./assets/profile-header.svg" width="100%" alt="byteD-x 主页头图" />
+</p>
 
-<!-- 动态打字效果 -->
-[![Typing SVG](https://readme-typing-svg.demolab.com?font=Noto+Sans+SC&weight=700&size=35&duration=3000&pause=1000&color=6366F1&center=true&vCenter=true&width=800&lines=%F0%9F%91%8B%E4%BD%A0%E5%A5%BD%EF%BC%8C%E6%88%91%E6%98%AF+byteD-x;%F0%9F%A4%96+AI+%E5%BA%94%E7%94%A8%E5%B7%A5%E7%A8%8B%E5%B8%88;%F0%9F%94%93+RAG+%E7%B3%BB%E7%BB%9F%E4%B8%93%E5%AE%B6;%E2%9C%A8+%E6%9E%84%E5%BB%BA+AI+%E6%98%9F%E9%87%8E)](https://git.io/typing-svg)
+<p align="center">
+  <a href="mailto:2041487752dxj@gmail.com">
+    <img src="https://img.shields.io/badge/邮箱-2041487752dxj%40gmail.com-EA4335?style=flat-square&logo=gmail&logoColor=white" alt="邮箱" />
+  </a>
+  <a href="https://github.com/byteD-x">
+    <img src="https://img.shields.io/badge/GitHub-@byteD--x-18181B?style=flat-square&logo=github&logoColor=white" alt="GitHub" />
+  </a>
+  <a href="https://my-resume-gray-five.vercel.app/">
+    <img src="https://img.shields.io/badge/作品集-在线访问-2563EB?style=flat-square&logo=vercel&logoColor=white" alt="作品集" />
+  </a>
+  <img src="https://img.shields.io/badge/微信-w2041487752-07C160?style=flat-square&logo=wechat&logoColor=white" alt="微信" />
+  <img src="https://img.shields.io/badge/状态-可交流合作-18181B?style=flat-square" alt="状态" />
+</p>
 
-<!-- 渐变分隔线 -->
-<img src="https://capsule-render.vercel.app/api?type=rect&color=gradient&customColorList=99CCFF,6366F1,A78BFA,EC4899&height=4&section=header&thickness=3" width="100%">
+```text
+你好，我是 byteD-x。
 
-</div>
-
-<br>
-
-<!-- 关于我 -->
-## 💼 关于我
-
-> **AI 应用工程师** | 专注 RAG 检索增强、Agent 智能体编排、企业级 AI 系统集成
-
-<div align="center">
-
-```
-╔════════════════════════════════════════════════════════════════╗
-║                    🎯 核心专注方向                             ║
-║                                                                ║
-║  🚀 正在构建：企业级 RAG 系统 · 多模态检索 · 幻觉防护          ║
-║  📚 持续探索：LangGraph 运行时 · 可恢复 AI 工作流              ║
-║  ⚙️  工程理念：数据驱动决策 · 质量优先 · 可衡量价值           ║
-║  💡 代码信条：优秀代码是调试出来的，而不只是写出来的          ║
-║                                                                ║
-╚════════════════════════════════════════════════════════════════╝
+AI 应用工程师，专注 RAG、Agent、多模态 AI 与生产级系统落地。
+我更关心真实业务场景里的稳定性、成本、可观测性和可验证结果。
 ```
 
-</div>
+## 我在做什么
 
-<br>
+我专注把 LLM 能力接到真实业务里，做的是能上线、能观测、能回归、能解释的 AI 系统。
 
-<!-- 技术栈 -->
-## 🔧 技术栈
+| 方向 | 我实际在做什么 |
+| --- | --- |
+| 检索与编排 | 混合检索、引用链路、LangGraph 工作流、可恢复执行 |
+| 多模态接入 | 文本 / 语音 / RTC 接入、业务工具调用、Auth Bridge、人工接管 |
+| 性能与成本 | 提速、缓存治理、Token 成本压缩、评测回归、稳定性基线 |
 
-<div align="center">
+## 我做的系统长什么样
 
-#### 🐍 后端开发
+```mermaid
+flowchart LR
+    U["用户 / 渠道"] --> I["接入层<br/>文本 | 语音 | RTC"]
+    I --> O["编排层<br/>LangGraph / Workflow"]
+    O --> R["检索层<br/>混合检索 / 重排 / 引用溯源"]
+    O --> T["工具层<br/>鉴权桥接 / 业务 API"]
+    O --> H["人工协同<br/>中断 / 恢复 / 转人工"]
+    R --> A["回答 / 执行动作"]
+    T --> A
+    H --> A
+    A --> F["反馈 / 评测 / 回归"]
+    F --> O
+```
+
+## 技术栈
+
+**核心栈**
+
 ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white)
-![Java](https://img.shields.io/badge/Java-007396?style=flat-square&logo=openjdk&logoColor=white)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=flat-square&logo=spring-boot&logoColor=white)
-
-#### 🤖 AI 与大模型
-![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=flat-square&logo=openai&logoColor=white)
-![LangChain](https://img.shields.io/badge/LangChain-1C3C3C?style=flat-square&logo=langchain&logoColor=white)
-![LangGraph](https://img.shields.io/badge/LangGraph-00D9FF?style=flat-square&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIgZmlsbD0id2hpdGUiLz48L3N2Zz4=&logoColor=black)
+![AsyncIO](https://img.shields.io/badge/AsyncIO-18181B?style=flat-square&logoColor=white)
+![Java 21](https://img.shields.io/badge/Java%2021-007396?style=flat-square&logo=openjdk&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot%203.x-6DB33F?style=flat-square&logo=spring-boot&logoColor=white)
+![LangGraph](https://img.shields.io/badge/LangGraph-18181B?style=flat-square&logoColor=white)
 ![Qdrant](https://img.shields.io/badge/Qdrant-EA5A25?style=flat-square&logo=qdrant&logoColor=white)
-
-#### ⚛️  前端开发
-![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=next.js&logoColor=white)
-![Vue.js](https://img.shields.io/badge/Vue.js-4FC08D?style=flat-square&logo=vue.js&logoColor=white)
-![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
-![React](https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=black)
-
-#### 💾 数据存储
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white)
-![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=redis&logoColor=white)
-![ClickHouse](https://img.shields.io/badge/ClickHouse-FFCC01?style=flat-square&logo=clickhouse&logoColor=black)
-![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white)
 
-#### 🚀 DevOps
+**交付栈**
+
+![Next.js](https://img.shields.io/badge/Next.js-18181B?style=flat-square&logo=next.js&logoColor=white)
+![Vue 3](https://img.shields.io/badge/Vue%203-4FC08D?style=flat-square&logo=vue.js&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=redis&logoColor=white)
+![ClickHouse](https://img.shields.io/badge/ClickHouse-FFCC01?style=flat-square&logoColor=black)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=docker&logoColor=white)
 ![Kubernetes](https://img.shields.io/badge/Kubernetes-326CE5?style=flat-square&logo=kubernetes&logoColor=white)
-![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white)
 
-</div>
+**也做过这些**
 
-<br>
+![Go](https://img.shields.io/badge/Go-00ADD8?style=flat-square&logo=go&logoColor=white)
+![Elasticsearch](https://img.shields.io/badge/Elasticsearch-005571?style=flat-square&logo=elasticsearch&logoColor=white)
+![Kafka](https://img.shields.io/badge/Kafka-231F20?style=flat-square&logo=apache-kafka&logoColor=white)
+![Electron](https://img.shields.io/badge/Electron-47848F?style=flat-square&logo=electron&logoColor=white)
 
-<!-- GitHub 统计 -->
-## 📊 GitHub 数据
-
-<div align="center">
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://github-readme-stats.vercel.app/api?username=byteD-x&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0d1117&title_color=6366F1&icon_color=6366F1&text_color=c9d1d9&locale=cn">
-  <img height="180em" alt="GitHub Stats" src="https://github-readme-stats.vercel.app/api?username=byteD-x&show_icons=true&theme=default&hide_border=true&title_color=6366F1&text_color=333&icon_color=6366F1&locale=cn" />
-</picture>
-
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://github-readme-stats.vercel.app/api/top-langs/?username=byteD-x&layout=compact&theme=tokyonight&hide_border=true&bg_color=0d1117&title_color=6366F1&text_color=c9d1d9&locale=cn">
-  <img height="180em" alt="Top Languages" src="https://github-readme-stats.vercel.app/api/top-langs/?username=byteD-x&layout=compact&theme=default&hide_border=true&title_color=6366F1&text_color=333&locale=cn" />
-</picture>
-
-</div>
-
-<br>
-
-<!-- 项目展示 -->
-## 🚀 精选项目
-
-<div align="center">
+## 代表项目
 
 <table>
-<tr>
-<td width="50%">
-
-#### 🤖 智能客服运行时
-多模态 AI 智能体 · 支持文本/语音/RTC · RAG 检索增强 · 人工协同接管 · 业务工具调用
-
-**技术栈**  
-![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white)
-![AsyncIO](https://img.shields.io/badge/AsyncIO-3776AB?style=flat-square&logo=python&logoColor=white)
-![LangGraph](https://img.shields.io/badge/LangGraph-00D9FF?style=flat-square)
-
-</td>
-<td width="50%">
-
-#### 💬 微信 AI 助手
-个人智能助理 · 长期记忆能力 · 并发请求处理 · 精细化成本控制 · Electron 管理端
-
-**技术栈**  
-![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
-![Quart](https://img.shields.io/badge/Quart-000000?style=flat-square&logo=python&logoColor=white)
-![RAG](https://img.shields.io/badge/RAG-FF6B6B?style=flat-square)
-
-</td>
-</tr>
-
-<tr>
-<td width="50%">
-
-#### 📚 RAG-QA 系统
-企业知识问答 · 多源文档接入 · 混合检索策略 · 可恢复运行时 · 答案引用溯源
-
-**技术栈**  
-![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white)
-![LangGraph](https://img.shields.io/badge/LangGraph-00D9FF?style=flat-square)
-![Qdrant](https://img.shields.io/badge/Qdrant-EA5A25?style=flat-square&logo=qdrant&logoColor=white)
-
-</td>
-<td width="50%">
-
-#### ☁️ EasyCloudPan
-云存储平台 · 一键快速部署 · 多租户隔离 · 高并发支持 · 安全通信加密
-
-**技术栈**  
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=flat-square&logo=spring-boot&logoColor=white)
-![Angular](https://img.shields.io/badge/Angular-DD0031?style=flat-square&logo=angular&logoColor=white)
-![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white)
-
-</td>
-</tr>
+  <tr>
+    <td width="50%" valign="top">
+      <strong><a href="https://github.com/byteD-x/customer-ai-runtime">customer-ai-runtime</a></strong><br />
+      企业级智能客服运行时，支持文本 / 语音 / RTC，多渠道接入与人工协同接管。<br /><br />
+      <code>Python</code> <code>FastAPI</code> <code>AsyncIO</code> <code>LangGraph</code> <code>Qdrant</code><br /><br />
+      <img src="https://img.shields.io/github/stars/byteD-x/customer-ai-runtime?style=flat-square&label=Star&color=18181B" alt="customer-ai-runtime stars" />
+      <img src="https://img.shields.io/github/last-commit/byteD-x/customer-ai-runtime?style=flat-square&label=最近更新&color=2563EB" alt="customer-ai-runtime updated" />
+    </td>
+    <td width="50%" valign="top">
+      <strong><a href="https://github.com/byteD-x/rag-qa-system">rag-qa-system</a></strong><br />
+      企业知识问答平台，多源文档接入、混合检索、答案引用溯源与评测回归。<br /><br />
+      <code>Python</code> <code>FastAPI</code> <code>LangGraph</code> <code>PostgreSQL</code> <code>Vue 3</code><br /><br />
+      <img src="https://img.shields.io/github/stars/byteD-x/rag-qa-system?style=flat-square&label=Star&color=18181B" alt="rag-qa-system stars" />
+      <img src="https://img.shields.io/github/last-commit/byteD-x/rag-qa-system?style=flat-square&label=最近更新&color=2563EB" alt="rag-qa-system updated" />
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <strong><a href="https://github.com/byteD-x/wechat-bot">wechat-bot</a></strong><br />
+      微信 PC 端 AI 助手，包含长期记忆、多模型支持、情感识别与 Electron 管理端。<br /><br />
+      <code>Python</code> <code>Quart</code> <code>AsyncIO</code> <code>Electron</code> <code>wxauto</code><br /><br />
+      <img src="https://img.shields.io/github/stars/byteD-x/wechat-bot?style=flat-square&label=Star&color=18181B" alt="wechat-bot stars" />
+      <img src="https://img.shields.io/github/last-commit/byteD-x/wechat-bot?style=flat-square&label=最近更新&color=2563EB" alt="wechat-bot updated" />
+    </td>
+    <td width="50%" valign="top">
+      <strong><a href="https://github.com/byteD-x/easyCloudPan">easyCloudPan</a></strong><br />
+      企业级网盘系统，前后端分离、多租户隔离、完整权限体系与高性能上传。<br /><br />
+      <code>Java 21</code> <code>Spring Boot 3.x</code> <code>Vue 3</code> <code>React 19</code><br /><br />
+      <img src="https://img.shields.io/github/stars/byteD-x/easyCloudPan?style=flat-square&label=Star&color=18181B" alt="easyCloudPan stars" />
+      <img src="https://img.shields.io/github/last-commit/byteD-x/easyCloudPan?style=flat-square&label=最近更新&color=2563EB" alt="easyCloudPan updated" />
+    </td>
+  </tr>
 </table>
 
-</div>
+## 做出过的结果
 
-<br>
+这些不是“会一点”的技能标签，而是做过并留下结果的工程信号。
 
-<!-- 3D 贡献图 -->
-## 🌌 代码宇宙
+| 事项 | 结果 |
+| --- | --- |
+| 报表性能优化 | `20s+ -> 4s`，约 `5x` 提速 |
+| AI 成本优化 | Token 成本下降 `40%` |
+| 数据迁移 | `300+` 表、`3e8+` 记录无损迁移 |
+| 交付方式 | 从需求澄清到上线闭环，强调回归与可验证性 |
 
-<div align="center">
+## 职业经历
 
-<!-- 3D 贡献动画 - 使用稳定的备用方案 -->
-<picture>
-  <img alt="Snake Animation" src="https://github.com/byteD-x/byteD-x/blob/output/github-contribution-grid-snake.svg" />
-</picture>
+| 时间 | 角色 | 事项 |
+| --- | --- | --- |
+| `2026.02 - 至今` | 独立开发者 | 持续开发智能客服运行时、RAG-QA 系统、微信 AI 助手等开源项目 |
+| `2025.11 - 2025.12` | 外包技术顾问 @ 南方科技大学 | 智能流程自动化原型，从需求澄清到闭环交付 |
+| `2025.04 - 2025.09` | 后端 / 全栈工程师 @ 中软国际 | 企业知识问答系统研发，负责 RAG 设计、LangGraph 运行时、评测回归 |
+| `2024.08 - 2024.10` | 后端开发实习生 @ 国家骨科临床研究中心 | 论文检索小程序后端，AI 搜索与订阅推送 |
+| `2024.05 - 2024.08` | 后端开发实习生 @ 中国联通陕西省分公司 | 运营平台建设，性能优化与大规模数据迁移 |
+| `2024.04 - 2026.02` | 全栈开发 @ 开源项目 | EasyCloudPan 网盘系统开发与维护 |
 
-<br><br>
+## GitHub 活跃轨迹
 
-<!-- 活动日历 - 增强稳定性 -->
-[![GitHub 活动图](https://github-readme-activity-graph.vercel.app/graph?username=byteD-x&theme=tokyo-night&hide_border=true&bg_color=0d1117&color=6366F1&line=6366F1&point=ff6b6b&area=true&area_color=6366f120)](https://github.com/ashutosh00710/github-readme-activity-graph)
+### 🐍 提交贡献蛇形动画
 
-<br><br>
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/byteD-x/byteD-x/blob/output/github-contribution-grid-snake-dark.svg" />
+    <source media="(prefers-color-scheme: light)" srcset="https://github.com/byteD-x/byteD-x/blob/output/github-contribution-grid-snake.svg" />
+    <img alt="GitHub contribution snake" src="https://github.com/byteD-x/byteD-x/blob/output/github-contribution-grid-snake.svg" width="100%" />
+  </picture>
+</p>
 
-<!-- 贡献摘要卡片 -->
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=byteD-x&theme=tokyonight">
-  <img alt="Profile Summary" src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=byteD-x&theme=default" width="100%" />
-</picture>
+### 📊 活动统计
 
-</div>
+<p align="center">
+  <a href="https://github.com/ashutosh00710/github-readme-activity-graph">
+    <img alt="Activity Graph" src="https://github-readme-activity-graph.vercel.app/graph?username=byteD-x&theme=github-dark&hide_border=true&area=true&point=00ff00&line=00ff00&radius=16" width="100%" />
+  </a>
+</p>
 
-<br>
+### 🔥 贡献热度
 
-<!-- 贡献统计 -->
-## 🔥 贡献记录
+<p align="center">
+  <a href="https://git.io/streak-stats">
+    <img alt="GitHub Streak Stats" src="https://github-readme-streak-stats.herokuapp.com/?user=byteD-x&theme=github-dark&hide_border=true&date_format=M%20j%5B%2C%20Y%5D" />
+  </a>
+</p>
 
-<div align="center">
+<details>
+  <summary><strong>联系方式</strong></summary>
+  <br />
 
-[![GitHub Streak](https://github-readme-streak-stats.herokuapp.com/?user=byteD-x&theme=tokyonight&hide_border=true&background=0d1117&stroke=6366F1&ring=6366F1&fire=ff6b6b&currStreakNum=c9d1d9&sideNums=c9d1d9&currStreakLabel=6366F1&sideLabels=6366F1&dates=8b949e&locale=zh)](https://git.io/streak-stats)
-
-</div>
-
-<br>
-
-<!-- 核心能力 -->
-## 💪 核心能力
-
-<div align="center">
-
-| 💡 能力领域 | 🎯 具体技能 | 📈 成果指标 |
-|:----:|:----:|:----:|
-| **🧠 企业级 RAG** | 多路检索 · 引用溯源 · 幻觉防护 | 检索准确率 > 90% |
-| **🤖 Agent 编排** | LangGraph · 运行时设计 · 可恢复流程 | 任务完成率 > 95% |
-| **🌐 多模态接入** | 文本 · 语音 · RTC · 业务工具 | 全渠道覆盖 |
-| **🚀 全栈交付** | 需求梳理 → 上线闭环 · CI/CD | 0 故障交付 |
-| **⚡ 性能优化** | 5x 提速 · 40% 成本下降 | 可复核价值 |
-
-</div>
-
-<br>
-
-<!-- 联系方式 -->
-## 📬 联系我
-
-<div align="center">
-
-[![邮箱](https://img.shields.io/badge/📧_Gmail-EA4335?style=flat-square&logo=gmail&logoColor=white)](mailto:2041487752@gmail.com)
-[![电话](https://img.shields.io/badge/📱_WeChat-09B83E?style=flat-square&logo=wechat&logoColor=white)](https://weixin.qq.com)
-[![作品集](https://img.shields.io/badge/🎨_Portfolio-6366F1?style=flat-square&logo=vercel&logoColor=white)](https://my-resume-gray-five.vercel.app/)
-[![GitHub](https://img.shields.io/badge/💻_GitHub-181717?style=flat-square&logo=github&logoColor=white)](https://github.com/byteD-x)
-
-</div>
-
-<br>
-
-<!-- 页脚 -->
-<div align="center">
-
-<img src="https://capsule-render.vercel.app/api?type=rect&color=gradient&customColorList=99CCFF,6366F1,A78BFA,EC4899&height=4&section=footer&thickness=3" width="100%">
-
-<br>
-
-> ⭐ **如果我的项目对你有帮助，别忘了点个 Star！**
+  - 邮件：`2041487752dxj@gmail.com`
+  - 微信：`w2041487752`
+  - GitHub：[`@byteD-x`](https://github.com/byteD-x)
+  - 作品集：[`my-resume-gray-five.vercel.app`](https://my-resume-gray-five.vercel.app/)
+  - 合作方向：`RAG / Agent`、`LLM 生产化`、`性能优化`、`技术咨询`
+</details>
 
 ---
 
-**🎨 用工程化思维构建稳定、可扩展、具有真实业务价值的 AI 系统**
-
-*Made with ❤️ by byteD-x* | *Last Updated: 2026-03-13*
-
-</div>
-
+<p align="center">
+  <code>最后更新：2026-03-13</code>
+</p>
