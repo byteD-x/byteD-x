@@ -19,13 +19,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Generate GitHub Contribution Grid Snake
-        uses: Platane/snk/svg-only@v3
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          github_user_name: ${{ github.repository_owner }}
-          outputs: |
-            dist/github-contribution-grid-snake.svg
-            dist/github-contribution-grid-snake-dark.svg?palette=github-dark
+          python-version: "3.12"
+
+      - name: Generate GitHub Contribution Grid Snake
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python scripts/generate_snake_svg.py --github-user "${{ github.repository_owner }}" --theme light --output dist/github-contribution-grid-snake.svg
+          python scripts/generate_snake_svg.py --github-user "${{ github.repository_owner }}" --theme dark --output dist/github-contribution-grid-snake-dark.svg
 
       - name: Push to output branch
         uses: crazy-max/ghaction-github-pages@v3.1.0

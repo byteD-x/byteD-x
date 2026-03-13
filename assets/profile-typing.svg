@@ -1,0 +1,14 @@
+<svg width="800" height="72" viewBox="0 0 800 72" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">byteD-x 简介横幅</title>
+  <desc id="desc">展示 AI 应用工程方向与 RAG、Agent、多模态系统相关关键词的静态横幅。</desc>
+  <rect x="1" y="1" width="798" height="70" rx="16" fill="#FAFAFA" stroke="#E4E4E7" stroke-width="2"/>
+  <text x="400" y="24" text-anchor="middle" fill="#2563EB" font-family="'Space Mono', 'Consolas', monospace" font-size="18" font-weight="700">
+    &gt; AI 应用工程师
+  </text>
+  <text x="400" y="43" text-anchor="middle" fill="#18181B" font-family="'Microsoft YaHei', 'PingFang SC', sans-serif" font-size="14" font-weight="600">
+    专注 RAG、Agent、多模态系统落地
+  </text>
+  <text x="400" y="61" text-anchor="middle" fill="#52525B" font-family="'Microsoft YaHei', 'PingFang SC', sans-serif" font-size="13">
+    追求真实业务场景的稳定性与可观测性
+  </text>
+</svg>

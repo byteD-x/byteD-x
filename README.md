@@ -19,31 +19,31 @@
 <br>
 
 <div align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Space+Mono&weight=600&size=20&pause=1000&color=2563EB&center=true&vCenter=true&width=800&lines=AI+应用工程师;专注+RAG、Agent、多模态系统落地;追求真实业务场景的稳定性与可观测性" alt="Typing SVG" />
+  <img src="./assets/profile-typing.svg" alt="byteD-x 简介横幅" style="max-width: 100%; height: auto;" />
 </div>
 
 <br>
 
-### <img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/terminal-square.svg" width="20" align="center" /> 核心聚焦 // CORE FOCUS
+### 核心聚焦
 
 <table>
   <tr>
     <td width="33%" valign="top">
-      <h4><img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/network.svg" width="16" align="center" /> 检索与编排</h4>
+      <h4>检索与编排</h4>
       <p style="font-size: 14px; color: #52525B;">混合检索、引用链路溯源、LangGraph 工作流、可恢复执行的 Agent 架构。</p>
     </td>
     <td width="33%" valign="top">
-      <h4><img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/mic.svg" width="16" align="center" /> 多模态与协同</h4>
+      <h4>多模态与协同</h4>
       <p style="font-size: 14px; color: #52525B;">文本 / 语音 / RTC 全渠道接入、业务工具调用、Auth Bridge 与人工接管机制。</p>
     </td>
     <td width="33%" valign="top">
-      <h4><img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/zap.svg" width="16" align="center" /> 性能与治理</h4>
+      <h4>性能与治理</h4>
       <p style="font-size: 14px; color: #52525B;">系统提速、缓存治理、Token 成本压缩 40%+、评测回归体系与稳定性基线建设。</p>
     </td>
   </tr>
 </table>
 
-### <img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/workflow.svg" width="20" align="center" /> 架构视图 // ARCHITECTURE
+### 架构视图
 
 ```mermaid
 %%{init: {'theme': 'base', 'themeVariables': { 'primaryColor': '#F8FAFC', 'primaryTextColor': '#09090B', 'primaryBorderColor': '#94A3B8', 'lineColor': '#64748B', 'secondaryColor': '#F1F5F9', 'tertiaryColor': '#E2E8F0', 'fontFamily': 'Space Mono, Consolas, monospace'}}}%%
@@ -69,7 +69,7 @@ flowchart LR
     style F fill:#FAFAFA,stroke:#E4E4E7,stroke-width:2px,stroke-dasharray: 5 5,color:#3F3F46
 ```
 
-### <img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/layers.svg" width="20" align="center" /> 技术栈 // TECH STACK
+### 技术栈
 
 <p>
   <b>核心架构：</b><br>
@@ -91,19 +91,19 @@ flowchart LR
   <img src="https://img.shields.io/badge/Kubernetes-18181B?style=flat-square&logo=kubernetes&logoColor=326CE5" />
 </p>
 
-### <img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/folder-git-2.svg" width="20" align="center" /> 代表项目 // FEATURED WORK
+### 代表项目
 
 <table width="100%" style="border-collapse: collapse; border: none;">
   <tr>
     <td width="50%" valign="top" style="border: 1px solid #E4E4E7; padding: 16px;">
-      <h4><img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/cpu.svg" width="16" align="center" /> <a href="https://github.com/byteD-x/customer-ai-runtime" style="color: #2563EB; text-decoration: none;">customer-ai-runtime</a></h4>
+      <h4><a href="https://github.com/byteD-x/customer-ai-runtime" style="color: #2563EB; text-decoration: none;">customer-ai-runtime</a></h4>
       <p style="font-size: 13px; color: #52525B;">企业级智能客服运行时。支持文本、语音、RTC 多渠道接入与人工协同接管。</p>
       <code>Python</code> <code>LangGraph</code> <code>Qdrant</code>
       <br><br>
       <img src="https://img.shields.io/github/stars/byteD-x/customer-ai-runtime?style=flat-square&color=2563EB&labelColor=18181B" />
     </td>
     <td width="50%" valign="top" style="border: 1px solid #E4E4E7; padding: 16px;">
-      <h4><img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/book-open.svg" width="16" align="center" /> <a href="https://github.com/byteD-x/rag-qa-system" style="color: #2563EB; text-decoration: none;">rag-qa-system</a></h4>
+      <h4><a href="https://github.com/byteD-x/rag-qa-system" style="color: #2563EB; text-decoration: none;">rag-qa-system</a></h4>
       <p style="font-size: 13px; color: #52525B;">企业知识问答平台。多源文档接入、混合检索、答案引用溯源与评测回归。</p>
       <code>FastAPI</code> <code>PostgreSQL</code> <code>Vue 3</code>
       <br><br>
@@ -112,14 +112,14 @@ flowchart LR
   </tr>
   <tr>
     <td width="50%" valign="top" style="border: 1px solid #E4E4E7; padding: 16px;">
-      <h4><img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/message-square.svg" width="16" align="center" /> <a href="https://github.com/byteD-x/wechat-bot" style="color: #2563EB; text-decoration: none;">wechat-bot</a></h4>
+      <h4><a href="https://github.com/byteD-x/wechat-bot" style="color: #2563EB; text-decoration: none;">wechat-bot</a></h4>
       <p style="font-size: 13px; color: #52525B;">微信 PC 端 AI 助手。包含长期记忆、多模型路由、情感识别与管理后台。</p>
       <code>AsyncIO</code> <code>Electron</code> <code>wxauto</code>
       <br><br>
       <img src="https://img.shields.io/github/stars/byteD-x/wechat-bot?style=flat-square&color=2563EB&labelColor=18181B" />
     </td>
     <td width="50%" valign="top" style="border: 1px solid #E4E4E7; padding: 16px;">
-      <h4><img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/cloud.svg" width="16" align="center" /> <a href="https://github.com/byteD-x/easyCloudPan" style="color: #2563EB; text-decoration: none;">easyCloudPan</a></h4>
+      <h4><a href="https://github.com/byteD-x/easyCloudPan" style="color: #2563EB; text-decoration: none;">easyCloudPan</a></h4>
       <p style="font-size: 13px; color: #52525B;">企业级网盘系统。多租户隔离、完整权限体系与高性能分片上传。</p>
       <code>Spring Boot</code> <code>React 19</code>
       <br><br>
@@ -128,7 +128,7 @@ flowchart LR
   </tr>
 </table>
 
-### <img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/history.svg" width="20" align="center" /> 履历与产出 // TIMELINE & IMPACT
+### 履历与产出
 
 <table width="100%">
   <tr>
@@ -158,7 +158,7 @@ flowchart LR
   </tr>
 </table>
 
-### <img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/activity.svg" width="20" align="center" /> 活动指标 // METRICS
+### 活动指标
 
 <div align="center">
 
@@ -178,5 +178,5 @@ flowchart LR
 <br>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/terminal.svg" width="14" align="center" /> <code style="color: #A1A1AA;">systemctl status byteD-x --no-pager</code>
+  <code style="color: #A1A1AA;">systemctl status byteD-x --no-pager</code>
 </p>
