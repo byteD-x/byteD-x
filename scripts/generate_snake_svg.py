@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate a polished GitHub contribution snake SVG.
+"""Generate a classic GitHub contribution snake SVG.
 
 Inputs:
 - `--github-user`: GitHub login to query.
@@ -24,34 +24,38 @@ import json
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable
+from typing import Iterable, Sequence
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 GRAPHQL_ENDPOINT = "https://api.github.com/graphql"
 CARD_WIDTH = 1026
 CARD_HEIGHT = 294
+CARD_RADIUS = 18
 GRID_LEFT = 38.0
-GRID_TOP = 108.0
+GRID_TOP = 112.0
 GRID_STEP = 18.0
 CELL_SIZE = 14.0
+GRID_ROWS = 7
 GRID_HEIGHT = 122.0
-GRID_CLIP_INSET = 1.5
-CARD_RADIUS = 26
+GRID_CLIP_INSET = 1.0
 LOOP_DURATION = 16.0
-PULSE_DURATION = 0.96
-SPAWN_FADE = 0.010
-FOOD_FADE = 0.010
-BASE_SEGMENTS = 6
-MAX_SEGMENTS = 18
-FOOD_RADIUS = 3.3
-SNAKE_GLOW_STDDEV = 2.8
-FOOD_GLOW_STDDEV = 2.6
-SEGMENT_SIZE_MIN = 7.2
-SEGMENT_SIZE_MAX = 9.4
-HEAD_WIDTH = 11.2
-HEAD_HEIGHT = 9.2
-HEAD_RADIUS = 4.4
+FOOD_HOLD_STEPS = 4
+SEGMENT_STEP_GAP = 1
+FOOD_FADE = 0.012
+CLEAR_FADE = 0.016
+REENTRY_FADE = 0.018
+BASE_SEGMENTS = 5
+MAX_SEGMENTS = 24
+BODY_BLOCK_SIZE = 16.8
+BODY_BLOCK_RADIUS = 4.0
+HEAD_LENGTH = 18.0
+HEAD_HEIGHT = 15.6
+HEAD_BRIDGE_WIDTH = 7.2
+HEAD_BRIDGE_HEIGHT = 13.8
+HEAD_BRIDGE_OVERLAP = 4.4
+FOOD_MARKER_SIZE = 4.2
+SNAKE_SHADOW_STDDEV = 0.7
 
 GRAPHQL_QUERY = """
 query($login: String!, $from: DateTime!, $to: DateTime!) {
@@ -77,101 +81,83 @@ query($login: String!, $from: DateTime!, $to: DateTime!) {
 @dataclass(frozen=True)
 class Theme:
     name: str
-    card_start: str
-    card_end: str
-    border: str
-    panel_fill: str
+    card_bg: str
+    card_border: str
+    panel_bg: str
+    panel_border: str
     title: str
     subtitle: str
     meta: str
-    path_stroke: str
-    shadow_color: str
-    food_glow: str
-    body_start: str
-    body_end: str
-    head_start: str
-    head_end: str
-    eye: str
-    tongue: str
-    food: str
-    level_none: str
+    empty_fill: str
+    empty_stroke: str
     level_1: str
     level_2: str
     level_3: str
     level_4: str
-    level_none_opacity: float
-    level_1_opacity: float
-    level_2_opacity: float
-    level_3_opacity: float
-    level_4_opacity: float
-    stats_bg: str
-    stats_stroke: str
+    snake_fill: str
+    snake_fill_alt: str
+    snake_stroke: str
+    head_fill: str
+    head_fill_alt: str
+    head_stroke: str
+    eye: str
+    food_fill: str
+    food_stroke: str
+    shadow_color: str
 
 
 THEMES = {
     "light": Theme(
         name="light",
-        card_start="#FCFDFE",
-        card_end="#F5F7FB",
-        border="#D6DCE8",
-        panel_fill="#DBEAFE",
-        title="#0F172A",
-        subtitle="#334155",
-        meta="#2563EB",
-        path_stroke="#CBD5E1",
-        shadow_color="#86EFAC",
-        food_glow="#FCD34D",
-        body_start="#16A34A",
-        body_end="#4ADE80",
-        head_start="#14532D",
-        head_end="#22C55E",
-        eye="#F8FAFC",
-        tongue="#F87171",
-        food="#F59E0B",
-        level_none="#DCEAFE",
-        level_1="#BFDBFE",
-        level_2="#93C5FD",
-        level_3="#60A5FA",
-        level_4="#2563EB",
-        level_none_opacity=0.60,
-        level_1_opacity=0.72,
-        level_2_opacity=0.84,
-        level_3_opacity=0.90,
-        level_4_opacity=0.96,
-        stats_bg="#EEF4FF",
-        stats_stroke="#D6E4FF",
+        card_bg="#FFFFFF",
+        card_border="#D0D7DE",
+        panel_bg="#F6F8FA",
+        panel_border="#D0D7DE",
+        title="#24292F",
+        subtitle="#57606A",
+        meta="#6E7781",
+        empty_fill="#EBEDF0",
+        empty_stroke="#D8DEE4",
+        level_1="#9BE9A8",
+        level_2="#40C463",
+        level_3="#30A14E",
+        level_4="#216E39",
+        snake_fill="#2DA44E",
+        snake_fill_alt="#3FB950",
+        snake_stroke="#1A7F37",
+        head_fill="#26A641",
+        head_fill_alt="#3FB950",
+        head_stroke="#1A7F37",
+        eye="#F6F8FA",
+        food_fill="#F78166",
+        food_stroke="#CF222E",
+        shadow_color="#2DA44E",
     ),
     "dark": Theme(
         name="dark",
-        card_start="#0B1220",
-        card_end="#020617",
-        border="#1E293B",
-        panel_fill="#0F172A",
-        title="#E2E8F0",
-        subtitle="#94A3B8",
-        meta="#60A5FA",
-        path_stroke="#334155",
-        shadow_color="#16A34A",
-        food_glow="#F59E0B",
-        body_start="#22C55E",
-        body_end="#86EFAC",
-        head_start="#DCFCE7",
-        head_end="#22C55E",
-        eye="#020617",
-        tongue="#F87171",
-        food="#F59E0B",
-        level_none="#1F2937",
-        level_1="#1D4ED8",
-        level_2="#2563EB",
-        level_3="#38BDF8",
-        level_4="#7DD3FC",
-        level_none_opacity=0.68,
-        level_1_opacity=0.74,
-        level_2_opacity=0.82,
-        level_3_opacity=0.90,
-        level_4_opacity=0.96,
-        stats_bg="#0F172A",
-        stats_stroke="#1E293B",
+        card_bg="#0D1117",
+        card_border="#30363D",
+        panel_bg="#0D1117",
+        panel_border="#30363D",
+        title="#C9D1D9",
+        subtitle="#8B949E",
+        meta="#7D8590",
+        empty_fill="#161B22",
+        empty_stroke="#21262D",
+        level_1="#0E4429",
+        level_2="#006D32",
+        level_3="#26A641",
+        level_4="#39D353",
+        snake_fill="#2EA043",
+        snake_fill_alt="#3FB950",
+        snake_stroke="#238636",
+        head_fill="#2EA043",
+        head_fill_alt="#56D364",
+        head_stroke="#238636",
+        eye="#F0F6FC",
+        food_fill="#FF7B72",
+        food_stroke="#F85149",
+        shadow_color="#238636",
     ),
 }
 
@@ -182,6 +168,24 @@ class ContributionDay:
     count: int
     level: str
     weekday: int
+
+
+@dataclass(frozen=True)
+class GridPoint:
+    column: int
+    row: int
+    x: float
+    y: float
+
+
+@dataclass(frozen=True)
+class SnakePath:
+    visible_points: tuple[GridPoint, ...]
+    full_points: tuple[GridPoint, ...]
+    first_visible_indexes: dict[tuple[int, int], int]
+    active_visit_indexes: tuple[int, ...]
+    heading_angles: tuple[float, ...]
+    hidden_start_index: int
 
 
 def require_token() -> str:
@@ -260,19 +264,30 @@ def fetch_contributions(user: str, token: str) -> tuple[int, list[list[Contribut
     return int(calendar_data["totalContributions"]), weeks
 
 
-def color_for_day(theme: Theme, day: ContributionDay) -> tuple[str, float]:
-    if day.level == "FOURTH_QUARTILE":
-        return theme.level_4, theme.level_4_opacity
-    if day.level == "THIRD_QUARTILE":
-        return theme.level_3, theme.level_3_opacity
-    if day.level == "SECOND_QUARTILE":
-        return theme.level_2, theme.level_2_opacity
-    if day.level == "FIRST_QUARTILE":
-        return theme.level_1, theme.level_1_opacity
-    return theme.level_none, theme.level_none_opacity
+def make_grid_point(column: int, row: int) -> GridPoint:
+    return GridPoint(
+        column=column,
+        row=row,
+        x=GRID_LEFT + column * GRID_STEP + CELL_SIZE / 2.0,
+        y=GRID_TOP + row * GRID_STEP + CELL_SIZE / 2.0,
+    )
 
 
-def build_month_labels(weeks: list[list[ContributionDay]]) -> list[tuple[int, str]]:
+def grid_key(point: GridPoint) -> tuple[int, int]:
+    return point.column, point.row
+
+
+def progress_at(index: int, total_points: int) -> float:
+    if total_points <= 1:
+        return 0.0
+    return index / float(total_points - 1)
+
+
+def flatten_days(weeks: Sequence[Sequence[ContributionDay]]) -> list[ContributionDay]:
+    return [day for week in weeks for day in week]
+
+
+def build_month_labels(weeks: Sequence[Sequence[ContributionDay]]) -> list[tuple[int, str]]:
     labels: list[tuple[int, str]] = []
     seen: set[tuple[int, int]] = set()
     for week_index, week in enumerate(weeks):
@@ -289,287 +304,447 @@ def build_month_labels(weeks: list[list[ContributionDay]]) -> list[tuple[int, st
     return labels
 
 
-def build_path_points(
-    weeks: list[list[ContributionDay]],
-) -> tuple[list[tuple[float, float]], list[tuple[float, float]], list[ContributionDay], dict[dt.date, tuple[float, float]]]:
-    forward_points: list[tuple[float, float]] = []
-    forward_days: list[ContributionDay] = []
-    centers: dict[dt.date, tuple[float, float]] = {}
-
-    for week_index, week in enumerate(weeks):
-        ordered_days = week if week_index % 2 == 0 else list(reversed(week))
-        for day in ordered_days:
-            center_x = GRID_LEFT + week_index * GRID_STEP + CELL_SIZE / 2.0
-            center_y = GRID_TOP + day.weekday * GRID_STEP + CELL_SIZE / 2.0
-            point = (center_x, center_y)
-            forward_points.append(point)
-            forward_days.append(day)
-            centers[day.date] = point
-
-    reverse_points = list(reversed(forward_points[:-1]))
-    full_points = forward_points + reverse_points
-    return full_points, forward_points, forward_days, centers
+def color_for_day(theme: Theme, day: ContributionDay) -> str:
+    if day.level == "FOURTH_QUARTILE":
+        return theme.level_4
+    if day.level == "THIRD_QUARTILE":
+        return theme.level_3
+    if day.level == "SECOND_QUARTILE":
+        return theme.level_2
+    if day.level == "FIRST_QUARTILE":
+        return theme.level_1
+    return theme.empty_fill
 
 
-def choose_food_indices(days: list[ContributionDay], target_count: int = 12) -> list[int]:
-    nonzero_days = [index for index, day in enumerate(days) if day.count > 0]
-    if not nonzero_days:
+def walk_axis(start: int, end: int) -> Iterable[int]:
+    if start == end:
         return []
-
-    target_count = max(6, min(target_count, len(nonzero_days)))
-    if len(nonzero_days) <= target_count:
-        return nonzero_days
-
-    selections: list[int] = []
-    anchor_step = (len(nonzero_days) - 1) / float(target_count - 1)
-
-    for slot in range(target_count):
-        anchor_position = round(slot * anchor_step)
-        start = max(0, anchor_position - 2)
-        end = min(len(nonzero_days), anchor_position + 3)
-        candidate_indexes = nonzero_days[start:end]
-        chosen_index = max(
-            candidate_indexes,
-            key=lambda index: (
-                days[index].count,
-                days[index].level == "FOURTH_QUARTILE",
-                days[index].level == "THIRD_QUARTILE",
-                -abs(index - nonzero_days[anchor_position]),
-            ),
-        )
-        selections.append(chosen_index)
-
-    return sorted(set(selections))
+    step = 1 if end > start else -1
+    return range(start + step, end + step, step)
 
 
-def format_path(points: Iterable[tuple[float, float]]) -> str:
-    points_list = list(points)
-    if not points_list:
-        return ""
-    values = [f"M {points_list[0][0]:.1f} {points_list[0][1]:.1f}"]
-    for x, y in points_list[1:]:
-        values.append(f"L {x:.1f} {y:.1f}")
-    return " ".join(values)
+def build_visible_route(weeks: Sequence[Sequence[ContributionDay]]) -> list[GridPoint]:
+    route: list[GridPoint] = []
+    for column, _week in enumerate(weeks):
+        rows = range(GRID_ROWS) if column % 2 == 0 else range(GRID_ROWS - 1, -1, -1)
+        for row in rows:
+            route.append(make_grid_point(column, row))
+    return route
 
 
-def progress_at(index: int, total_points: int) -> float:
-    if total_points <= 1:
-        return 0.0
-    return index / float(total_points - 1)
+def choose_hidden_row(start: GridPoint, end: GridPoint) -> int:
+    top_cost = start.row + end.row
+    bottom_cost = (GRID_ROWS - 1 - start.row) + (GRID_ROWS - 1 - end.row)
+    return -1 if top_cost <= bottom_cost else GRID_ROWS
 
 
-def stats_summary(days: list[ContributionDay]) -> tuple[int, int, int]:
-    active_cells = sum(1 for day in days if day.count > 0)
-    best_day = max((day.count for day in days), default=0)
-    streak_like = max(sum(1 for day in week if day.count > 0) for week in chunk_days(days))
-    return active_cells, best_day, streak_like
+def build_hidden_loop(start: GridPoint, end: GridPoint) -> list[GridPoint]:
+    hidden_row = choose_hidden_row(start, end)
+    return [
+        make_grid_point(start.column, hidden_row),
+        make_grid_point(end.column, hidden_row),
+        end,
+    ]
 
 
-def chunk_days(days: list[ContributionDay], width: int = 7) -> Iterable[list[ContributionDay]]:
-    for index in range(0, len(days), width):
-        yield days[index : index + width]
+def build_heading_angles(points: Sequence[GridPoint]) -> tuple[float, ...]:
+    if not points:
+        return ()
+
+    angles: list[float] = []
+    for index, point in enumerate(points):
+        next_point: GridPoint | None = None
+        for future in points[index + 1 :]:
+            if future.x != point.x or future.y != point.y:
+                next_point = future
+                break
+        if next_point is None:
+            for previous in reversed(points[:index]):
+                if previous.x != point.x or previous.y != point.y:
+                    next_point = point
+                    point = previous
+                    break
+
+        if next_point is None:
+            angles.append(0.0)
+            continue
+
+        dx = next_point.column - point.column
+        dy = next_point.row - point.row
+        if dx > 0:
+            angles.append(0.0)
+        elif dx < 0:
+            angles.append(180.0)
+        elif dy > 0:
+            angles.append(90.0)
+        else:
+            angles.append(-90.0)
+    return tuple(angles)
 
 
-def make_food_svg(theme: Theme, food_indices: list[int], days: list[ContributionDay], centers: dict[dt.date, tuple[float, float]], total_points: int) -> str:
-    parts: list[str] = []
-    for index in food_indices:
-        day = days[index]
-        cx, cy = centers[day.date]
-        eat_progress = progress_at(index, total_points)
-        hide_progress = min(eat_progress + FOOD_FADE, 0.999)
-        parts.append(
-            (
-                f'<g filter="url(#{theme.name}-food-glow)">'
-                f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{FOOD_RADIUS:.1f}" fill="{theme.food}">'
-                f'<animate attributeName="r" values="{FOOD_RADIUS - 0.3:.1f};{FOOD_RADIUS + 0.8:.1f};{FOOD_RADIUS - 0.3:.1f}" dur="{PULSE_DURATION:.2f}s" repeatCount="indefinite" />'
-                f'<animate attributeName="opacity" values="1;1;0;0;1" '
-                f'keyTimes="0;{eat_progress:.5f};{hide_progress:.5f};0.999;1" '
-                f'dur="{LOOP_DURATION:.1f}s" repeatCount="indefinite" />'
-                f"</circle></g>"
-            )
-        )
-    return "".join(parts)
+def build_snake_path(weeks: Sequence[Sequence[ContributionDay]]) -> SnakePath:
+    route = build_visible_route(weeks)
+    if not route:
+        return SnakePath((), (), {}, (), (), 0)
 
+    active_coords = {
+        (column, day.weekday)
+        for column, week in enumerate(weeks)
+        for day in week
+        if day.count > 0
+    }
 
-def make_body_segments(theme: Theme, food_indices: list[int], total_points: int) -> str:
-    extra_segments = min(len(food_indices), MAX_SEGMENTS - BASE_SEGMENTS)
-    segment_total = BASE_SEGMENTS + extra_segments
-    if total_points <= 0:
-        return ""
+    visible_points: list[GridPoint] = []
+    first_visible_indexes: dict[tuple[int, int], int] = {}
+    active_visit_indexes: list[int] = []
 
-    time_per_step = LOOP_DURATION / max(total_points - 1, 1)
-    segment_spacing = time_per_step * 2.45
-    parts: list[str] = []
+    for point in route:
+        visible_points.append(point)
+        key = grid_key(point)
+        if key not in first_visible_indexes:
+            first_visible_indexes[key] = len(visible_points) - 1
+            if key in active_coords:
+                active_visit_indexes.append(first_visible_indexes[key])
+        if key in active_coords:
+            for _ in range(FOOD_HOLD_STEPS):
+                visible_points.append(point)
 
-    for segment_index in range(segment_total):
-        progress = segment_index / float(max(segment_total - 1, 1))
-        size = SEGMENT_SIZE_MIN + progress * (SEGMENT_SIZE_MAX - SEGMENT_SIZE_MIN)
-        radius = size / 2.0
-        begin = -(segment_total - 1 - segment_index) * segment_spacing
+    hidden_start_index = len(visible_points)
+    hidden_points = build_hidden_loop(route[-1], route[0])
+    full_points = visible_points + hidden_points
 
-        opacity_animation = ""
-        if segment_index >= BASE_SEGMENTS:
-            food_progress = progress_at(food_indices[segment_index - BASE_SEGMENTS], total_points)
-            reveal_progress = min(food_progress + SPAWN_FADE, 0.999)
-            opacity_animation = (
-                f'<animate attributeName="opacity" values="0;0;1;1" '
-                f'keyTimes="0;{food_progress:.5f};{reveal_progress:.5f};1" '
-                f'dur="{LOOP_DURATION:.1f}s" repeatCount="indefinite" />'
-            )
-        group_opacity = ' opacity="0"' if opacity_animation else ""
-
-        parts.append(
-            (
-                f'<g filter="url(#{theme.name}-snake-glow)" opacity="1">'
-                f"<g{group_opacity}>"
-                f'<circle cx="0" cy="0" r="{radius:.2f}" fill="url(#{theme.name}-body-gradient)" />'
-                f"{opacity_animation}"
-                f'<animateMotion dur="{LOOP_DURATION:.1f}s" begin="{begin:.3f}s" repeatCount="indefinite">'
-                f'<mpath href="#{theme.name}-snake-path" />'
-                f"</animateMotion>"
-                f"</g></g>"
-            )
-        )
-
-    return "".join(parts)
-
-
-def make_head_svg(theme: Theme) -> str:
-    head_x = HEAD_WIDTH / 2.0
-    head_y = HEAD_HEIGHT / 2.0
-    return (
-        f'<g filter="url(#{theme.name}-snake-glow)">'
-        f"<g>"
-        f'<rect x="-{head_x:.2f}" y="-{head_y:.2f}" width="{HEAD_WIDTH:.2f}" height="{HEAD_HEIGHT:.2f}" rx="{HEAD_RADIUS:.2f}" fill="url(#{theme.name}-head-gradient)" />'
-        f'<circle cx="1.55" cy="-1.50" r="0.88" fill="{theme.eye}" />'
-        f'<circle cx="1.55" cy="1.50" r="0.88" fill="{theme.eye}" />'
-        f'<path d="M {head_x - 0.65:.2f} -0.65 Q {head_x + 0.95:.2f} 0 {head_x - 0.65:.2f} 0.65" stroke="{theme.tongue}" stroke-width="0.8" stroke-linecap="round" fill="none" />'
-        f'<animateMotion dur="{LOOP_DURATION:.1f}s" repeatCount="indefinite" rotate="auto">'
-        f'<mpath href="#{theme.name}-snake-path" />'
-        f"</animateMotion>"
-        f"</g></g>"
+    return SnakePath(
+        visible_points=tuple(visible_points),
+        full_points=tuple(full_points),
+        first_visible_indexes=first_visible_indexes,
+        active_visit_indexes=tuple(active_visit_indexes),
+        heading_angles=build_heading_angles(full_points),
+        hidden_start_index=hidden_start_index,
     )
 
 
-def make_month_labels(months: list[tuple[int, str]], theme: Theme) -> str:
+def segment_total_for_food_count(food_count: int) -> int:
+    return min(MAX_SEGMENTS, BASE_SEGMENTS + max(food_count, 0))
+
+
+def shift_points(points: Sequence[GridPoint], delay_steps: int) -> list[GridPoint]:
+    if not points:
+        return []
+    shifted: list[GridPoint] = []
+    for index in range(len(points)):
+        shifted.append(points[max(0, index - delay_steps)])
+    return shifted
+
+
+def format_translate_values(points: Sequence[GridPoint]) -> str:
+    return ";".join(f"{point.x:.1f} {point.y:.1f}" for point in points)
+
+
+def format_rotation_values(angles: Sequence[float]) -> str:
+    return ";".join(f"{angle:.1f}" for angle in angles)
+
+
+def format_key_times(count: int) -> str:
+    if count <= 1:
+        return "0;1"
+    return ";".join(f"{index / float(count - 1):.5f}" for index in range(count))
+
+
+def hidden_loop_opacity_animation(path: SnakePath) -> str:
+    total_points = len(path.full_points)
+    hide_progress = progress_at(path.hidden_start_index, total_points)
+    fade_out_progress = min(hide_progress + REENTRY_FADE, 0.999)
+    fade_in_progress = max(fade_out_progress, 1.0 - REENTRY_FADE)
+    return (
+        f'<animate attributeName="opacity" values="1;1;0;0;1" '
+        f'keyTimes="0;{hide_progress:.5f};{fade_out_progress:.5f};{fade_in_progress:.5f};1" '
+        f'dur="{LOOP_DURATION:.1f}s" repeatCount="indefinite" />'
+    )
+
+
+def reveal_animation(reveal_step: int | None, total_points: int) -> tuple[str, str]:
+    if reveal_step is None:
+        return "", ""
+    start = progress_at(reveal_step, total_points)
+    end = min(start + FOOD_FADE, 0.999)
+    return (
+        ' opacity="0"',
+        (
+            f'<animate attributeName="opacity" values="0;0;1;1" '
+            f'keyTimes="0;{start:.5f};{end:.5f};1" '
+            f'dur="{LOOP_DURATION:.1f}s" repeatCount="indefinite" />'
+        ),
+    )
+
+
+def make_heatmap_cells(
+    theme: Theme,
+    weeks: Sequence[Sequence[ContributionDay]],
+    path: SnakePath,
+) -> str:
+    total_points = len(path.full_points)
+    parts: list[str] = []
+
+    for column, week in enumerate(weeks):
+        for day in week:
+            x = GRID_LEFT + column * GRID_STEP
+            y = GRID_TOP + day.weekday * GRID_STEP
+            active_fill = color_for_day(theme, day)
+            cell_class = "contribution-cell grid-animated"
+            content = [
+                f'<rect class="{cell_class}" x="{x:.1f}" y="{y:.1f}" width="{CELL_SIZE:.0f}" height="{CELL_SIZE:.0f}" rx="3" '
+                f'fill="{theme.empty_fill}" stroke="{theme.empty_stroke}" stroke-width="0.9" />'
+            ]
+
+            if day.count > 0:
+                visit_index = path.first_visible_indexes[(column, day.weekday)]
+                start = progress_at(visit_index, total_points)
+                end = min(start + CLEAR_FADE, 0.999)
+                active_class = "contribution-cell active-cell grid-animated"
+                content = [
+                    f'<rect class="{active_class}" x="{x:.1f}" y="{y:.1f}" width="{CELL_SIZE:.0f}" height="{CELL_SIZE:.0f}" rx="3" '
+                    f'fill="{active_fill}" stroke="{active_fill}" stroke-width="0.9">',
+                    f'<animate attributeName="fill" values="{active_fill};{active_fill};{theme.empty_fill};{theme.empty_fill};{active_fill}" '
+                    f'keyTimes="0;{start:.5f};{end:.5f};0.999;1" dur="{LOOP_DURATION:.1f}s" repeatCount="indefinite" />',
+                    f'<animate attributeName="stroke" values="{active_fill};{active_fill};{theme.empty_stroke};{theme.empty_stroke};{active_fill}" '
+                    f'keyTimes="0;{start:.5f};{end:.5f};0.999;1" dur="{LOOP_DURATION:.1f}s" repeatCount="indefinite" />',
+                    "</rect>",
+                ]
+
+            parts.append("".join(content))
+
+    return "".join(parts)
+
+
+def make_static_grid(theme: Theme, weeks: Sequence[Sequence[ContributionDay]]) -> str:
+    parts: list[str] = ['<g class="grid-static">']
+    for column, week in enumerate(weeks):
+        for day in week:
+            x = GRID_LEFT + column * GRID_STEP
+            y = GRID_TOP + day.weekday * GRID_STEP
+            parts.append(
+                f'<rect x="{x:.1f}" y="{y:.1f}" width="{CELL_SIZE:.0f}" height="{CELL_SIZE:.0f}" rx="3" '
+                f'fill="{theme.empty_fill}" stroke="{theme.empty_stroke}" stroke-width="0.9" />'
+            )
+    parts.append("</g>")
+    return "".join(parts)
+
+
+def make_food_svg(
+    theme: Theme,
+    weeks: Sequence[Sequence[ContributionDay]],
+    path: SnakePath,
+) -> str:
+    total_points = len(path.full_points)
+    half = FOOD_MARKER_SIZE / 2.0
+    parts: list[str] = []
+
+    for column, week in enumerate(weeks):
+        for day in week:
+            if day.count <= 0:
+                continue
+            point = make_grid_point(column, day.weekday)
+            visit_index = path.first_visible_indexes[(column, day.weekday)]
+            hide_progress = progress_at(visit_index, total_points)
+            hidden_progress = min(hide_progress + FOOD_FADE, 0.999)
+            parts.append(
+                (
+                    f'<g class="food-marker snake-animated" transform="translate({point.x:.1f} {point.y:.1f})">'
+                    f'<animate attributeName="opacity" values="1;1;0;0;1" '
+                    f'keyTimes="0;{hide_progress:.5f};{hidden_progress:.5f};0.999;1" '
+                    f'dur="{LOOP_DURATION:.1f}s" repeatCount="indefinite" />'
+                    f'<circle cx="0" cy="0" r="{half:.2f}" fill="{theme.food_fill}" stroke="{theme.food_stroke}" stroke-width="0.7" />'
+                    f"</g>"
+                )
+            )
+    return "".join(parts)
+
+
+def head_inner_svg(theme: Theme) -> str:
+    bridge_x = -(HEAD_LENGTH / 2.0) - HEAD_BRIDGE_OVERLAP
+    bridge_y = -(HEAD_BRIDGE_HEIGHT / 2.0)
+    head_path = (
+        f"M {-HEAD_LENGTH / 2.0:.2f} {-HEAD_HEIGHT / 2.0:.2f} "
+        f"H {HEAD_LENGTH / 10.0:.2f} "
+        f"L {HEAD_LENGTH / 2.0:.2f} 0 "
+        f"L {HEAD_LENGTH / 10.0:.2f} {HEAD_HEIGHT / 2.0:.2f} "
+        f"H {-HEAD_LENGTH / 2.0:.2f} Z"
+    )
+    return (
+        f'<rect x="{bridge_x:.2f}" y="{bridge_y:.2f}" width="{HEAD_BRIDGE_WIDTH:.2f}" '
+        f'height="{HEAD_BRIDGE_HEIGHT:.2f}" rx="3.2" fill="url(#{theme.name}-snake-body)" '
+        f'stroke="{theme.snake_stroke}" stroke-width="1.0" />'
+        f'<path d="{head_path}" fill="url(#{theme.name}-snake-head)" '
+        f'stroke="{theme.head_stroke}" stroke-width="1.0" />'
+        f'<circle cx="-2.10" cy="-2.55" r="0.95" fill="{theme.eye}" />'
+        f'<circle cx="-2.10" cy="2.55" r="0.95" fill="{theme.eye}" />'
+    )
+
+
+def make_body_segments(theme: Theme, path: SnakePath) -> str:
+    total_points = len(path.full_points)
+    key_times = format_key_times(total_points)
+    translate_values_cache: dict[int, str] = {}
+    parts: list[str] = []
+    segment_total = segment_total_for_food_count(len(path.active_visit_indexes))
+
+    for segment_index in range(segment_total):
+        delay_steps = (segment_index + 1) * SEGMENT_STEP_GAP
+        if delay_steps not in translate_values_cache:
+            translate_values_cache[delay_steps] = format_translate_values(shift_points(path.full_points, delay_steps))
+
+        reveal_step: int | None = None
+        if segment_index >= BASE_SEGMENTS:
+            reveal_index = segment_index - BASE_SEGMENTS
+            if reveal_index < len(path.active_visit_indexes):
+                reveal_step = path.active_visit_indexes[reveal_index]
+        initial_opacity, reveal = reveal_animation(reveal_step, total_points)
+        parts.append(
+            (
+                f'<g class="snake-animated">'
+                f"{hidden_loop_opacity_animation(path)}"
+                f"<g{initial_opacity}>"
+                f"{reveal}"
+                f'<g filter="url(#{theme.name}-snake-shadow)">'
+                f'<rect x="-{BODY_BLOCK_SIZE / 2.0:.2f}" y="-{BODY_BLOCK_SIZE / 2.0:.2f}" '
+                f'width="{BODY_BLOCK_SIZE:.2f}" height="{BODY_BLOCK_SIZE:.2f}" rx="{BODY_BLOCK_RADIUS:.2f}" '
+                f'fill="url(#{theme.name}-snake-body)" stroke="{theme.snake_stroke}" stroke-width="1.0" />'
+                f'<animateTransform attributeName="transform" type="translate" '
+                f'values="{translate_values_cache[delay_steps]}" keyTimes="{key_times}" '
+                f'dur="{LOOP_DURATION:.1f}s" repeatCount="indefinite" />'
+                f"</g></g></g>"
+            )
+        )
+    return "".join(parts)
+
+
+def make_head_svg(theme: Theme, path: SnakePath) -> str:
+    total_points = len(path.full_points)
+    key_times = format_key_times(total_points)
+    translate_values = format_translate_values(path.full_points)
+    rotate_values = format_rotation_values(path.heading_angles)
+    return (
+        f'<g class="snake-animated">'
+        f"{hidden_loop_opacity_animation(path)}"
+        f'<g filter="url(#{theme.name}-snake-shadow)">'
+        f'<animateTransform attributeName="transform" type="translate" values="{translate_values}" '
+        f'keyTimes="{key_times}" dur="{LOOP_DURATION:.1f}s" repeatCount="indefinite" />'
+        f'<g>{head_inner_svg(theme)}'
+        f'<animateTransform attributeName="transform" type="rotate" values="{rotate_values}" '
+        f'keyTimes="{key_times}" calcMode="discrete" dur="{LOOP_DURATION:.1f}s" repeatCount="indefinite" />'
+        f"</g></g></g>"
+    )
+
+
+def make_static_snapshot(theme: Theme, path: SnakePath) -> str:
+    if not path.full_points:
+        return ""
+
+    end_step = max(0, path.hidden_start_index - 1)
+    segment_total = segment_total_for_food_count(len(path.active_visit_indexes))
+    parts: list[str] = ['<g class="snake-static">']
+
+    for segment_index in reversed(range(segment_total)):
+        delay_steps = (segment_index + 1) * SEGMENT_STEP_GAP
+        point = path.full_points[max(0, end_step - delay_steps)]
+        parts.append(
+            f'<rect x="{point.x - BODY_BLOCK_SIZE / 2.0:.2f}" y="{point.y - BODY_BLOCK_SIZE / 2.0:.2f}" '
+            f'width="{BODY_BLOCK_SIZE:.2f}" height="{BODY_BLOCK_SIZE:.2f}" rx="{BODY_BLOCK_RADIUS:.2f}" '
+            f'fill="url(#{theme.name}-snake-body)" stroke="{theme.snake_stroke}" stroke-width="1.0" />'
+        )
+
+    head_point = path.full_points[end_step]
+    head_angle = path.heading_angles[end_step] if path.heading_angles else 0.0
+    parts.append(
+        f'<g transform="translate({head_point.x:.2f} {head_point.y:.2f}) rotate({head_angle:.1f})">'
+        f"{head_inner_svg(theme)}"
+        f"</g>"
+    )
+    parts.append("</g>")
+    return "".join(parts)
+
+
+def make_month_labels(months: Sequence[tuple[int, str]], theme: Theme) -> str:
     parts: list[str] = []
     for week_index, label in months:
         x = GRID_LEFT + week_index * GRID_STEP
         parts.append(
-            f'<text x="{x:.1f}" y="98" fill="{theme.meta}" font-family="Space Mono, Consolas, monospace" '
-            f'font-size="10" font-weight="600">{html.escape(label)}</text>'
+            f'<text x="{x:.1f}" y="100" fill="{theme.meta}" font-family="Segoe UI, Microsoft YaHei, sans-serif" '
+            f'font-size="10">{html.escape(label)}</text>'
         )
     return "".join(parts)
 
 
 def make_weekday_labels(theme: Theme) -> str:
     labels = [("Mon", 1), ("Wed", 3), ("Fri", 5)]
-    parts = []
+    parts: list[str] = []
     for label, weekday in labels:
         y = GRID_TOP + weekday * GRID_STEP + CELL_SIZE / 2.0 + 1.0
         parts.append(
-            f'<text x="10" y="{y:.1f}" fill="{theme.subtitle}" font-family="Space Mono, Consolas, monospace" font-size="10">{label}</text>'
-        )
-    return "".join(parts)
-
-
-def make_heatmap_rects(theme: Theme, weeks: list[list[ContributionDay]]) -> str:
-    parts: list[str] = []
-    for week_index, week in enumerate(weeks):
-        for day in week:
-            x = GRID_LEFT + week_index * GRID_STEP
-            y = GRID_TOP + day.weekday * GRID_STEP
-            fill, opacity = color_for_day(theme, day)
-            parts.append(
-                f'<rect x="{x:.1f}" y="{y:.1f}" width="{CELL_SIZE:.0f}" height="{CELL_SIZE:.0f}" rx="4" '
-                f'fill="{fill}" fill-opacity="{opacity:.2f}" />'
-            )
-    return "".join(parts)
-
-
-def make_stats_row(theme: Theme, active_cells: int, best_day: int, weekly_burst: int) -> str:
-    chips = [
-        (GRID_LEFT, f"active:{active_cells}"),
-        (GRID_LEFT + 176, f"peak:{best_day}"),
-        (GRID_LEFT + 324, f"burst:{weekly_burst}"),
-        (GRID_LEFT + 484, f"loop:{LOOP_DURATION:.0f}s"),
-    ]
-    parts: list[str] = []
-    for x, label in chips:
-        width = 118 if label.startswith("loop") else 128
-        parts.append(
-            f'<rect x="{x:.1f}" y="248" width="{width}" height="24" rx="12" fill="{theme.stats_bg}" stroke="{theme.stats_stroke}" />'
-        )
-        parts.append(
-            f'<text x="{x + 16:.1f}" y="264" fill="{theme.subtitle}" font-family="Space Mono, Consolas, monospace" font-size="11" font-weight="600">{html.escape(label)}</text>'
+            f'<text x="10" y="{y:.1f}" fill="{theme.meta}" font-family="Segoe UI, Microsoft YaHei, sans-serif" font-size="10">{label}</text>'
         )
     return "".join(parts)
 
 
 def render_svg(user: str, theme: Theme, total_contributions: int, weeks: list[list[ContributionDay]]) -> str:
+    if not weeks:
+        raise SystemExit("No contribution weeks returned.")
+
+    flat_days = flatten_days(weeks)
+    if not flat_days:
+        raise SystemExit("No contribution days returned.")
+
+    path = build_snake_path(weeks)
     months = build_month_labels(weeks)
-    full_points, forward_points, forward_days, centers = build_path_points(weeks)
-    food_indices = choose_food_indices(forward_days)
-    path_data = format_path(full_points)
-    start_date = min(day.date for day in forward_days)
-    end_date = max(day.date for day in forward_days)
-    active_cells, best_day, weekly_burst = stats_summary(forward_days)
-    meta_text = f"growth:adaptive loop:{LOOP_DURATION:.0f}s motion:polished"
+    start_date = min(day.date for day in flat_days)
+    end_date = max(day.date for day in flat_days)
+    active_count = sum(1 for day in flat_days if day.count > 0)
+    grid_width = len(weeks) * GRID_STEP - 4
 
     return (
         f'<svg width="{CARD_WIDTH}" height="{CARD_HEIGHT}" viewBox="0 0 {CARD_WIDTH} {CARD_HEIGHT}" fill="none" '
         f'xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">'
-        f'<title id="title">{html.escape(user)} contribution snake</title>'
-        f'<desc id="desc">A polished GitHub contribution snake animation with adaptive growth and highlighted milestones.</desc>'
+        f'<title id="title">{html.escape(user)} GitHub contribution snake</title>'
+        f'<desc id="desc">A classic GitHub contribution snake animation that clears contribution cells and grows after eating active cells.</desc>'
         f"<defs>"
-        f'<linearGradient id="{theme.name}-card-bg" x1="0" y1="0" x2="{CARD_WIDTH}" y2="{CARD_HEIGHT}" gradientUnits="userSpaceOnUse">'
-        f'<stop stop-color="{theme.card_start}" />'
-        f'<stop offset="1" stop-color="{theme.card_end}" />'
+        f'<linearGradient id="{theme.name}-snake-body" x1="-10" y1="-10" x2="10" y2="10" gradientUnits="userSpaceOnUse">'
+        f'<stop stop-color="{theme.snake_fill_alt}" />'
+        f'<stop offset="1" stop-color="{theme.snake_fill}" />'
         f"</linearGradient>"
-        f'<linearGradient id="{theme.name}-body-gradient" x1="-8" y1="-8" x2="8" y2="8" gradientUnits="userSpaceOnUse">'
-        f'<stop stop-color="{theme.body_start}" />'
-        f'<stop offset="1" stop-color="{theme.body_end}" />'
+        f'<linearGradient id="{theme.name}-snake-head" x1="-10" y1="-10" x2="10" y2="10" gradientUnits="userSpaceOnUse">'
+        f'<stop stop-color="{theme.head_fill_alt}" />'
+        f'<stop offset="1" stop-color="{theme.head_fill}" />'
         f"</linearGradient>"
-        f'<linearGradient id="{theme.name}-head-gradient" x1="-8" y1="-8" x2="8" y2="8" gradientUnits="userSpaceOnUse">'
-        f'<stop stop-color="{theme.head_start}" />'
-        f'<stop offset="1" stop-color="{theme.head_end}" />'
-        f"</linearGradient>"
-        f'<filter id="{theme.name}-snake-glow" x="-50%" y="-50%" width="200%" height="200%">'
-        f'<feDropShadow dx="0" dy="0" stdDeviation="{SNAKE_GLOW_STDDEV:.1f}" flood-color="{theme.shadow_color}" flood-opacity="0.36" />'
-        f"</filter>"
-        f'<filter id="{theme.name}-food-glow" x="-50%" y="-50%" width="200%" height="200%">'
-        f'<feDropShadow dx="0" dy="0" stdDeviation="{FOOD_GLOW_STDDEV:.1f}" flood-color="{theme.food_glow}" flood-opacity="0.48" />'
+        f'<filter id="{theme.name}-snake-shadow" x="-50%" y="-50%" width="200%" height="200%">'
+        f'<feDropShadow dx="0" dy="0" stdDeviation="{SNAKE_SHADOW_STDDEV:.1f}" '
+        f'flood-color="{theme.shadow_color}" flood-opacity="0.18" />'
         f"</filter>"
         f'<clipPath id="{theme.name}-grid-clip">'
-        f'<rect x="{GRID_LEFT + GRID_CLIP_INSET:.1f}" y="{GRID_TOP + GRID_CLIP_INSET:.1f}" width="{len(weeks) * GRID_STEP - 4 - GRID_CLIP_INSET * 2:.1f}" height="{GRID_HEIGHT - GRID_CLIP_INSET * 2:.1f}" rx="8" />'
+        f'<rect x="{GRID_LEFT + GRID_CLIP_INSET:.1f}" y="{GRID_TOP + GRID_CLIP_INSET:.1f}" '
+        f'width="{grid_width - GRID_CLIP_INSET * 2:.1f}" height="{GRID_HEIGHT - GRID_CLIP_INSET * 2:.1f}" rx="6" />'
         f"</clipPath>"
-        f'<mask id="{theme.name}-grid-mask" maskUnits="userSpaceOnUse">'
-        f'<rect x="{GRID_LEFT + GRID_CLIP_INSET:.1f}" y="{GRID_TOP + GRID_CLIP_INSET:.1f}" width="{len(weeks) * GRID_STEP - 4 - GRID_CLIP_INSET * 2:.1f}" height="{GRID_HEIGHT - GRID_CLIP_INSET * 2:.1f}" rx="8" fill="#ffffff" />'
-        f"</mask>"
-        f'<path id="{theme.name}-snake-path" d="{path_data}" />'
         f"</defs>"
-        f'<rect width="{CARD_WIDTH}" height="{CARD_HEIGHT}" rx="{CARD_RADIUS}" fill="url(#{theme.name}-card-bg)" />'
-        f'<rect x="1" y="1" width="{CARD_WIDTH - 2}" height="{CARD_HEIGHT - 2}" rx="{CARD_RADIUS - 1}" stroke="{theme.border}" />'
-        f'<rect x="28" y="24" width="{CARD_WIDTH - 56}" height="216" rx="20" fill="{theme.panel_fill}" fill-opacity="0.22" />'
-        f'<text x="{GRID_LEFT:.0f}" y="38" fill="{theme.title}" font-family="Space Mono, Consolas, monospace" font-size="18" font-weight="700">contribution://snake</text>'
-        f'<text x="{GRID_LEFT:.0f}" y="60" fill="{theme.subtitle}" font-family="Segoe UI, Microsoft YaHei, sans-serif" font-size="13" font-weight="600">'
-        f"{html.escape(user)} route {total_contributions} contributions"
-        f"</text>"
-        f'<text x="{GRID_LEFT:.0f}" y="80" fill="{theme.subtitle}" font-family="Space Mono, Consolas, monospace" font-size="11">'
-        f"{start_date.isoformat()} to {end_date.isoformat()}"
-        f"</text>"
-        f'<text x="{CARD_WIDTH - 38}" y="38" text-anchor="end" fill="{theme.meta}" font-family="Space Mono, Consolas, monospace" font-size="11" font-weight="700">'
-        f"{html.escape(meta_text)}"
-        f"</text>"
+        f"<style>"
+        f".grid-static,.snake-static{{display:none;}}"
+        f"@media (prefers-reduced-motion: reduce){{.grid-animated,.snake-animated{{display:none;}}.grid-static,.snake-static{{display:inline;}}}}"
+        f"</style>"
+        f'<rect width="{CARD_WIDTH}" height="{CARD_HEIGHT}" rx="{CARD_RADIUS}" fill="{theme.card_bg}" />'
+        f'<rect x="1" y="1" width="{CARD_WIDTH - 2}" height="{CARD_HEIGHT - 2}" rx="{CARD_RADIUS - 1}" stroke="{theme.card_border}" />'
+        f'<rect x="28" y="24" width="{CARD_WIDTH - 56}" height="222" rx="14" fill="{theme.panel_bg}" stroke="{theme.panel_border}" />'
+        f'<text x="{GRID_LEFT:.0f}" y="46" fill="{theme.title}" font-family="Segoe UI, Microsoft YaHei, sans-serif" font-size="20" font-weight="700">GitHub contribution snake</text>'
+        f'<text x="{GRID_LEFT:.0f}" y="68" fill="{theme.subtitle}" font-family="Segoe UI, Microsoft YaHei, sans-serif" font-size="12">{html.escape(user)} · {total_contributions} contributions</text>'
+        f'<text x="{GRID_LEFT:.0f}" y="86" fill="{theme.meta}" font-family="Segoe UI, Microsoft YaHei, sans-serif" font-size="10">{start_date.isoformat()} to {end_date.isoformat()}</text>'
+        f'<text x="{CARD_WIDTH - 38}" y="46" text-anchor="end" fill="{theme.meta}" font-family="Segoe UI, Microsoft YaHei, sans-serif" font-size="10">active cells {active_count}</text>'
         f"{make_month_labels(months, theme)}"
-        f'<g opacity="0.95">{make_heatmap_rects(theme, weeks)}</g>'
-        f'<path d="{path_data}" stroke="{theme.path_stroke}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.16" />'
-        f"<g>{make_weekday_labels(theme)}</g>"
-        f'<g clip-path="url(#{theme.name}-grid-clip)" mask="url(#{theme.name}-grid-mask)">'
-        f"<g>{make_food_svg(theme, food_indices, forward_days, centers, len(full_points))}</g>"
-        f"<g>{make_body_segments(theme, food_indices, len(full_points))}{make_head_svg(theme)}</g>"
+        f"{make_weekday_labels(theme)}"
+        f'<g clip-path="url(#{theme.name}-grid-clip)">'
+        f"{make_heatmap_cells(theme, weeks, path)}"
+        f"{make_static_grid(theme, weeks)}"
+        f"{make_food_svg(theme, weeks, path)}"
+        f"{make_body_segments(theme, path)}"
+        f"{make_head_svg(theme, path)}"
+        f"{make_static_snapshot(theme, path)}"
         f"</g>"
-        f"{make_stats_row(theme, active_cells, best_day, weekly_burst)}"
         f"</svg>"
     )
 
@@ -586,9 +761,6 @@ def main() -> int:
     args = parse_args()
     token = require_token()
     total_contributions, weeks = fetch_contributions(args.github_user, token)
-    if not weeks:
-        raise SystemExit("No contribution weeks returned.")
-
     svg = render_svg(args.github_user, THEMES[args.theme], total_contributions, weeks)
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
