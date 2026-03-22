@@ -2,7 +2,6 @@ name: Generate Snake Animation
 
 on:
   schedule:
-    # 每天 UTC 时间 00:00 运行
     - cron: "0 0 * * *"
   workflow_dispatch:
   push:
@@ -15,26 +14,54 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/checkout@v5
         with:
-          python-version: "3.12"
+          fetch-depth: 0
 
       - name: Generate GitHub Contribution Grid Snake
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          python scripts/generate_snake_svg.py --github-user "${{ github.repository_owner }}" --theme light --output dist/github-contribution-grid-snake.svg
-          python scripts/generate_snake_svg.py --github-user "${{ github.repository_owner }}" --theme dark --output dist/github-contribution-grid-snake-dark.svg
-
-      - name: Push to output branch
-        uses: crazy-max/ghaction-github-pages@v3.1.0
+        uses: Platane/snk/svg-only@v3
         with:
-          target_branch: output
-          build_dir: dist
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          github_user_name: ${{ github.repository_owner }}
+          outputs: |
+            dist/github-contribution-grid-snake.svg?palette=github-light
+            dist/github-contribution-grid-snake-dark.svg?palette=github-dark
+
+      - name: Publish to output branch
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          publish_dir="output-branch"
+
+          if git ls-remote --exit-code --heads origin output; then
+            git worktree add -B output "$publish_dir" origin/output
+          else
+            git worktree add --detach "$publish_dir"
+            (
+              cd "$publish_dir"
+              git checkout --orphan output
+              git rm -rf . >/dev/null 2>&1 || true
+              find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
+            )
+          fi
+
+          find "$publish_dir" -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
+          cp -R dist/. "$publish_dir"/
+          touch "$publish_dir/.nojekyll"
+
+          (
+            cd "$publish_dir"
+            git add --all
+
+            if git diff --cached --quiet; then
+              echo "No changes to publish"
+              exit 0
+            fi
+
+            git commit -m "chore: update snake animation"
+            git push origin output
+          )
