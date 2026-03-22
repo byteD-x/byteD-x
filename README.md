@@ -168,8 +168,6 @@ flowchart LR
   <img alt="GitHub contribution snake" src="https://raw.githubusercontent.com/byteD-x/byteD-x/output/github-contribution-grid-snake.svg" style="max-width: 100%; height: auto;" />
 </picture>
 
-<sub style="color: #64748B;">自定义蛇形动画：自适应增长、16s 平滑循环、亮暗双主题。</sub>
-
 <br>
 
 <img src="https://github-readme-stats.vercel.app/api?username=byteD-x&show_icons=true&theme=transparent&hide_border=true&title_color=2563EB&text_color=52525B&icon_color=2563EB" width="49%" />

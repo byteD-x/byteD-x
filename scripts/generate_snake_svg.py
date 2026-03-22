@@ -36,6 +36,7 @@ GRID_TOP = 108.0
 GRID_STEP = 18.0
 CELL_SIZE = 14.0
 GRID_HEIGHT = 122.0
+GRID_CLIP_INSET = 1.5
 CARD_RADIUS = 26
 LOOP_DURATION = 16.0
 PULSE_DURATION = 0.96
@@ -43,6 +44,15 @@ SPAWN_FADE = 0.010
 FOOD_FADE = 0.010
 BASE_SEGMENTS = 6
 MAX_SEGMENTS = 18
+BODY_RX_MIN = 3.85
+BODY_RX_MAX = 4.95
+BODY_RY_MIN = 3.55
+BODY_RY_MAX = 4.20
+HEAD_RX = 5.90
+HEAD_RY = 5.25
+FOOD_RADIUS = 3.3
+SNAKE_GLOW_STDDEV = 2.8
+FOOD_GLOW_STDDEV = 2.6
 
 GRAPHQL_QUERY = """
 query($login: String!, $from: DateTime!, $to: DateTime!) {
@@ -371,8 +381,8 @@ def make_food_svg(theme: Theme, food_indices: list[int], days: list[Contribution
         parts.append(
             (
                 f'<g filter="url(#{theme.name}-food-glow)">'
-                f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="3.6" fill="{theme.food}">'
-                f'<animate attributeName="r" values="3.1;4.5;3.1" dur="{PULSE_DURATION:.2f}s" repeatCount="indefinite" />'
+                f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{FOOD_RADIUS:.1f}" fill="{theme.food}">'
+                f'<animate attributeName="r" values="{FOOD_RADIUS - 0.3:.1f};{FOOD_RADIUS + 0.8:.1f};{FOOD_RADIUS - 0.3:.1f}" dur="{PULSE_DURATION:.2f}s" repeatCount="indefinite" />'
                 f'<animate attributeName="opacity" values="1;1;0;0;1" '
                 f'keyTimes="0;{eat_progress:.5f};{hide_progress:.5f};0.999;1" '
                 f'dur="{LOOP_DURATION:.1f}s" repeatCount="indefinite" />'
@@ -394,8 +404,8 @@ def make_body_segments(theme: Theme, food_indices: list[int], total_points: int)
 
     for segment_index in range(segment_total):
         progress = segment_index / float(max(segment_total - 1, 1))
-        rx = 4.1 + progress * 1.2
-        ry = 3.75 + progress * 0.7
+        rx = BODY_RX_MIN + progress * (BODY_RX_MAX - BODY_RX_MIN)
+        ry = BODY_RY_MIN + progress * (BODY_RY_MAX - BODY_RY_MIN)
         begin = -(segment_total - 1 - segment_index) * segment_spacing
 
         opacity_animation = ""
@@ -429,7 +439,7 @@ def make_head_svg(theme: Theme) -> str:
     return (
         f'<g filter="url(#{theme.name}-snake-glow)">'
         f"<g>"
-        f'<ellipse cx="0" cy="0" rx="6.45" ry="5.85" fill="url(#{theme.name}-head-gradient)" />'
+        f'<ellipse cx="0" cy="0" rx="{HEAD_RX:.2f}" ry="{HEAD_RY:.2f}" fill="url(#{theme.name}-head-gradient)" />'
         f'<circle cx="2.15" cy="-1.55" r="0.95" fill="{theme.eye}" />'
         f'<circle cx="2.15" cy="1.55" r="0.95" fill="{theme.eye}" />'
         f'<circle cx="3.85" cy="0" r="0.55" fill="{theme.tongue}" fill-opacity="0.92" />'
@@ -524,13 +534,13 @@ def render_svg(user: str, theme: Theme, total_contributions: int, weeks: list[li
         f'<stop offset="1" stop-color="{theme.head_end}" />'
         f"</linearGradient>"
         f'<filter id="{theme.name}-snake-glow" x="-50%" y="-50%" width="200%" height="200%">'
-        f'<feDropShadow dx="0" dy="0" stdDeviation="3.8" flood-color="{theme.shadow_color}" flood-opacity="0.45" />'
+        f'<feDropShadow dx="0" dy="0" stdDeviation="{SNAKE_GLOW_STDDEV:.1f}" flood-color="{theme.shadow_color}" flood-opacity="0.36" />'
         f"</filter>"
         f'<filter id="{theme.name}-food-glow" x="-50%" y="-50%" width="200%" height="200%">'
-        f'<feDropShadow dx="0" dy="0" stdDeviation="3.2" flood-color="{theme.food_glow}" flood-opacity="0.55" />'
+        f'<feDropShadow dx="0" dy="0" stdDeviation="{FOOD_GLOW_STDDEV:.1f}" flood-color="{theme.food_glow}" flood-opacity="0.48" />'
         f"</filter>"
         f'<clipPath id="{theme.name}-grid-clip">'
-        f'<rect x="{GRID_LEFT:.0f}" y="{GRID_TOP:.0f}" width="{len(weeks) * GRID_STEP - 4:.0f}" height="{GRID_HEIGHT:.0f}" rx="8" />'
+        f'<rect x="{GRID_LEFT + GRID_CLIP_INSET:.1f}" y="{GRID_TOP + GRID_CLIP_INSET:.1f}" width="{len(weeks) * GRID_STEP - 4 - GRID_CLIP_INSET * 2:.1f}" height="{GRID_HEIGHT - GRID_CLIP_INSET * 2:.1f}" rx="8" />'
         f"</clipPath>"
         f'<path id="{theme.name}-snake-path" d="{path_data}" />'
         f"</defs>"
