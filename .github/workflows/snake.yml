@@ -21,13 +21,17 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Generate GitHub Contribution Grid Snake
-        uses: Platane/snk/svg-only@v3
+      - name: Setup Python
+        uses: actions/setup-python@v6
         with:
-          github_user_name: ${{ github.repository_owner }}
-          outputs: |
-            dist/github-contribution-grid-snake.svg?palette=github-light
-            dist/github-contribution-grid-snake-dark.svg?palette=github-dark
+          python-version: "3.12"
+
+      - name: Generate Polished Contribution Snake
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python scripts/generate_snake_svg.py --github-user "${{ github.repository_owner }}" --theme light --output dist/github-contribution-grid-snake.svg
+          python scripts/generate_snake_svg.py --github-user "${{ github.repository_owner }}" --theme dark --output dist/github-contribution-grid-snake-dark.svg
 
       - name: Publish to output branch
         shell: bash
