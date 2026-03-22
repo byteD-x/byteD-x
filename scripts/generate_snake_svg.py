@@ -44,19 +44,14 @@ SPAWN_FADE = 0.010
 FOOD_FADE = 0.010
 BASE_SEGMENTS = 6
 MAX_SEGMENTS = 18
-BODY_RX_MIN = 3.85
-BODY_RX_MAX = 4.95
-BODY_RY_MIN = 3.55
-BODY_RY_MAX = 4.20
-HEAD_RX = 5.90
-HEAD_RY = 5.25
 FOOD_RADIUS = 3.3
 SNAKE_GLOW_STDDEV = 2.8
 FOOD_GLOW_STDDEV = 2.6
-SEGMENT_SIZE_MIN = 7.6
-SEGMENT_SIZE_MAX = 9.6
-HEAD_SIZE = 10.8
-HEAD_RADIUS = 3.8
+SEGMENT_SIZE_MIN = 7.2
+SEGMENT_SIZE_MAX = 9.4
+HEAD_WIDTH = 11.2
+HEAD_HEIGHT = 9.2
+HEAD_RADIUS = 4.4
 
 GRAPHQL_QUERY = """
 query($login: String!, $from: DateTime!, $to: DateTime!) {
@@ -124,12 +119,12 @@ THEMES = {
         subtitle="#334155",
         meta="#2563EB",
         path_stroke="#CBD5E1",
-        shadow_color="#93C5FD",
+        shadow_color="#86EFAC",
         food_glow="#FCD34D",
-        body_start="#2563EB",
-        body_end="#60A5FA",
-        head_start="#0F172A",
-        head_end="#2563EB",
+        body_start="#16A34A",
+        body_end="#4ADE80",
+        head_start="#14532D",
+        head_end="#22C55E",
         eye="#F8FAFC",
         tongue="#F87171",
         food="#F59E0B",
@@ -156,12 +151,12 @@ THEMES = {
         subtitle="#94A3B8",
         meta="#60A5FA",
         path_stroke="#334155",
-        shadow_color="#1D4ED8",
+        shadow_color="#16A34A",
         food_glow="#F59E0B",
-        body_start="#2563EB",
-        body_end="#38BDF8",
-        head_start="#E2E8F0",
-        head_end="#60A5FA",
+        body_start="#22C55E",
+        body_end="#86EFAC",
+        head_start="#DCFCE7",
+        head_end="#22C55E",
         eye="#020617",
         tongue="#F87171",
         food="#F59E0B",
@@ -408,10 +403,8 @@ def make_body_segments(theme: Theme, food_indices: list[int], total_points: int)
 
     for segment_index in range(segment_total):
         progress = segment_index / float(max(segment_total - 1, 1))
-        rx = BODY_RX_MIN + progress * (BODY_RX_MAX - BODY_RX_MIN)
-        ry = BODY_RY_MIN + progress * (BODY_RY_MAX - BODY_RY_MIN)
         size = SEGMENT_SIZE_MIN + progress * (SEGMENT_SIZE_MAX - SEGMENT_SIZE_MIN)
-        offset = size / 2.0
+        radius = size / 2.0
         begin = -(segment_total - 1 - segment_index) * segment_spacing
 
         opacity_animation = ""
@@ -429,7 +422,7 @@ def make_body_segments(theme: Theme, food_indices: list[int], total_points: int)
             (
                 f'<g filter="url(#{theme.name}-snake-glow)" opacity="1">'
                 f"<g{group_opacity}>"
-                f'<rect x="-{offset:.2f}" y="-{offset:.2f}" width="{size:.2f}" height="{size:.2f}" rx="{min(rx, ry):.2f}" fill="url(#{theme.name}-body-gradient)" />'
+                f'<circle cx="0" cy="0" r="{radius:.2f}" fill="url(#{theme.name}-body-gradient)" />'
                 f"{opacity_animation}"
                 f'<animateMotion dur="{LOOP_DURATION:.1f}s" begin="{begin:.3f}s" repeatCount="indefinite">'
                 f'<mpath href="#{theme.name}-snake-path" />'
@@ -442,15 +435,16 @@ def make_body_segments(theme: Theme, food_indices: list[int], total_points: int)
 
 
 def make_head_svg(theme: Theme) -> str:
-    head_offset = HEAD_SIZE / 2.0
+    head_x = HEAD_WIDTH / 2.0
+    head_y = HEAD_HEIGHT / 2.0
     return (
         f'<g filter="url(#{theme.name}-snake-glow)">'
         f"<g>"
-        f'<rect x="-{head_offset:.2f}" y="-{head_offset:.2f}" width="{HEAD_SIZE:.2f}" height="{HEAD_SIZE:.2f}" rx="{HEAD_RADIUS:.2f}" fill="url(#{theme.name}-head-gradient)" />'
-        f'<circle cx="2.15" cy="-1.55" r="0.95" fill="{theme.eye}" />'
-        f'<circle cx="2.15" cy="1.55" r="0.95" fill="{theme.eye}" />'
-        f'<circle cx="3.85" cy="0" r="0.55" fill="{theme.tongue}" fill-opacity="0.92" />'
-        f'<animateMotion dur="{LOOP_DURATION:.1f}s" repeatCount="indefinite">'
+        f'<rect x="-{head_x:.2f}" y="-{head_y:.2f}" width="{HEAD_WIDTH:.2f}" height="{HEAD_HEIGHT:.2f}" rx="{HEAD_RADIUS:.2f}" fill="url(#{theme.name}-head-gradient)" />'
+        f'<circle cx="1.55" cy="-1.50" r="0.88" fill="{theme.eye}" />'
+        f'<circle cx="1.55" cy="1.50" r="0.88" fill="{theme.eye}" />'
+        f'<path d="M {head_x - 0.65:.2f} -0.65 Q {head_x + 0.95:.2f} 0 {head_x - 0.65:.2f} 0.65" stroke="{theme.tongue}" stroke-width="0.8" stroke-linecap="round" fill="none" />'
+        f'<animateMotion dur="{LOOP_DURATION:.1f}s" repeatCount="indefinite" rotate="auto">'
         f'<mpath href="#{theme.name}-snake-path" />'
         f"</animateMotion>"
         f"</g></g>"
@@ -569,7 +563,7 @@ def render_svg(user: str, theme: Theme, total_contributions: int, weeks: list[li
         f"</text>"
         f"{make_month_labels(months, theme)}"
         f'<g opacity="0.95">{make_heatmap_rects(theme, weeks)}</g>'
-        f'<path d="{path_data}" stroke="{theme.path_stroke}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.38" />'
+        f'<path d="{path_data}" stroke="{theme.path_stroke}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.16" />'
         f"<g>{make_weekday_labels(theme)}</g>"
         f'<g clip-path="url(#{theme.name}-grid-clip)" mask="url(#{theme.name}-grid-mask)">'
         f"<g>{make_food_svg(theme, food_indices, forward_days, centers, len(full_points))}</g>"
