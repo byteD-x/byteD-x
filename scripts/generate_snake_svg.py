@@ -53,6 +53,10 @@ HEAD_RY = 5.25
 FOOD_RADIUS = 3.3
 SNAKE_GLOW_STDDEV = 2.8
 FOOD_GLOW_STDDEV = 2.6
+SEGMENT_SIZE_MIN = 7.6
+SEGMENT_SIZE_MAX = 9.6
+HEAD_SIZE = 10.8
+HEAD_RADIUS = 3.8
 
 GRAPHQL_QUERY = """
 query($login: String!, $from: DateTime!, $to: DateTime!) {
@@ -406,6 +410,8 @@ def make_body_segments(theme: Theme, food_indices: list[int], total_points: int)
         progress = segment_index / float(max(segment_total - 1, 1))
         rx = BODY_RX_MIN + progress * (BODY_RX_MAX - BODY_RX_MIN)
         ry = BODY_RY_MIN + progress * (BODY_RY_MAX - BODY_RY_MIN)
+        size = SEGMENT_SIZE_MIN + progress * (SEGMENT_SIZE_MAX - SEGMENT_SIZE_MIN)
+        offset = size / 2.0
         begin = -(segment_total - 1 - segment_index) * segment_spacing
 
         opacity_animation = ""
@@ -423,9 +429,9 @@ def make_body_segments(theme: Theme, food_indices: list[int], total_points: int)
             (
                 f'<g filter="url(#{theme.name}-snake-glow)" opacity="1">'
                 f"<g{group_opacity}>"
-                f'<ellipse cx="0" cy="0" rx="{rx:.2f}" ry="{ry:.2f}" fill="url(#{theme.name}-body-gradient)" />'
+                f'<rect x="-{offset:.2f}" y="-{offset:.2f}" width="{size:.2f}" height="{size:.2f}" rx="{min(rx, ry):.2f}" fill="url(#{theme.name}-body-gradient)" />'
                 f"{opacity_animation}"
-                f'<animateMotion dur="{LOOP_DURATION:.1f}s" begin="{begin:.3f}s" repeatCount="indefinite" rotate="auto">'
+                f'<animateMotion dur="{LOOP_DURATION:.1f}s" begin="{begin:.3f}s" repeatCount="indefinite">'
                 f'<mpath href="#{theme.name}-snake-path" />'
                 f"</animateMotion>"
                 f"</g></g>"
@@ -436,14 +442,15 @@ def make_body_segments(theme: Theme, food_indices: list[int], total_points: int)
 
 
 def make_head_svg(theme: Theme) -> str:
+    head_offset = HEAD_SIZE / 2.0
     return (
         f'<g filter="url(#{theme.name}-snake-glow)">'
         f"<g>"
-        f'<ellipse cx="0" cy="0" rx="{HEAD_RX:.2f}" ry="{HEAD_RY:.2f}" fill="url(#{theme.name}-head-gradient)" />'
+        f'<rect x="-{head_offset:.2f}" y="-{head_offset:.2f}" width="{HEAD_SIZE:.2f}" height="{HEAD_SIZE:.2f}" rx="{HEAD_RADIUS:.2f}" fill="url(#{theme.name}-head-gradient)" />'
         f'<circle cx="2.15" cy="-1.55" r="0.95" fill="{theme.eye}" />'
         f'<circle cx="2.15" cy="1.55" r="0.95" fill="{theme.eye}" />'
         f'<circle cx="3.85" cy="0" r="0.55" fill="{theme.tongue}" fill-opacity="0.92" />'
-        f'<animateMotion dur="{LOOP_DURATION:.1f}s" repeatCount="indefinite" rotate="auto">'
+        f'<animateMotion dur="{LOOP_DURATION:.1f}s" repeatCount="indefinite">'
         f'<mpath href="#{theme.name}-snake-path" />'
         f"</animateMotion>"
         f"</g></g>"
@@ -542,6 +549,9 @@ def render_svg(user: str, theme: Theme, total_contributions: int, weeks: list[li
         f'<clipPath id="{theme.name}-grid-clip">'
         f'<rect x="{GRID_LEFT + GRID_CLIP_INSET:.1f}" y="{GRID_TOP + GRID_CLIP_INSET:.1f}" width="{len(weeks) * GRID_STEP - 4 - GRID_CLIP_INSET * 2:.1f}" height="{GRID_HEIGHT - GRID_CLIP_INSET * 2:.1f}" rx="8" />'
         f"</clipPath>"
+        f'<mask id="{theme.name}-grid-mask" maskUnits="userSpaceOnUse">'
+        f'<rect x="{GRID_LEFT + GRID_CLIP_INSET:.1f}" y="{GRID_TOP + GRID_CLIP_INSET:.1f}" width="{len(weeks) * GRID_STEP - 4 - GRID_CLIP_INSET * 2:.1f}" height="{GRID_HEIGHT - GRID_CLIP_INSET * 2:.1f}" rx="8" fill="#ffffff" />'
+        f"</mask>"
         f'<path id="{theme.name}-snake-path" d="{path_data}" />'
         f"</defs>"
         f'<rect width="{CARD_WIDTH}" height="{CARD_HEIGHT}" rx="{CARD_RADIUS}" fill="url(#{theme.name}-card-bg)" />'
@@ -561,7 +571,7 @@ def render_svg(user: str, theme: Theme, total_contributions: int, weeks: list[li
         f'<g opacity="0.95">{make_heatmap_rects(theme, weeks)}</g>'
         f'<path d="{path_data}" stroke="{theme.path_stroke}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-opacity="0.38" />'
         f"<g>{make_weekday_labels(theme)}</g>"
-        f'<g clip-path="url(#{theme.name}-grid-clip)">'
+        f'<g clip-path="url(#{theme.name}-grid-clip)" mask="url(#{theme.name}-grid-mask)">'
         f"<g>{make_food_svg(theme, food_indices, forward_days, centers, len(full_points))}</g>"
         f"<g>{make_body_segments(theme, food_indices, len(full_points))}{make_head_svg(theme)}</g>"
         f"</g>"
