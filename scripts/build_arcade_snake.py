@@ -21,10 +21,10 @@ STYLE_APPEND = """
 .arcade-badge-pixel{fill:#f3efe6;stroke:#111111;stroke-width:2;shape-rendering:crispEdges}
 .arcade-badge-auto{fill:#ffb347;stroke:#111111;stroke-width:2;shape-rendering:crispEdges}
 .arcade-badge-live{fill:#72df67;stroke:#111111;stroke-width:2;shape-rendering:crispEdges}
-.arcade-badge-text{fill:#111111;font-family:'Courier New',Consolas,monospace;font-size:8px;font-weight:700;letter-spacing:0.4px;text-anchor:middle}
-.arcade-title{fill:#fff7e6;font-family:'Courier New',Consolas,monospace;font-size:13px;font-weight:700;letter-spacing:0.9px}
-.arcade-footer-title{fill:#fff7e6;font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC','Segoe UI',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.2px}
-.arcade-legend-text{fill:#f3efe6;font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC','Segoe UI',sans-serif;font-size:8.8px;font-weight:700;letter-spacing:0}
+.arcade-badge-text{fill:#111111;font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC','Segoe UI',sans-serif;font-size:9.6px;font-weight:700;letter-spacing:0;text-anchor:middle}
+.arcade-title{fill:#fff7e6;font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC','Segoe UI',sans-serif;font-size:16px;font-weight:700;letter-spacing:0.2px}
+.arcade-footer-title{fill:#fff7e6;font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC','Segoe UI',sans-serif;font-size:12px;font-weight:700;letter-spacing:0.2px}
+.arcade-legend-text{fill:#f3efe6;font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC','Segoe UI',sans-serif;font-size:10.6px;font-weight:700;letter-spacing:0}
 .arcade-legend-idle{fill:#f3efe6;stroke:#111111;stroke-width:2;shape-rendering:crispEdges}
 .arcade-legend-low{fill:#b7f77a;stroke:#111111;stroke-width:2;shape-rendering:crispEdges}
 .arcade-legend-mid{fill:#5bbe4a;stroke:#111111;stroke-width:2;shape-rendering:crispEdges}
@@ -67,38 +67,38 @@ def append_rect(parent: ET.Element, attrs: dict[str, str]) -> ET.Element:
 
 
 def add_badge(parent: ET.Element, x: int, width: int, rect_class: str, label: str) -> None:
-    append_rect(parent, {"class": rect_class, "x": str(x), "y": "-18", "width": str(width), "height": "13"})
-    append_text(parent, "text", {"class": "arcade-badge-text", "x": str(x + (width / 2)), "y": "-8"}, label)
+    append_rect(parent, {"class": rect_class, "x": str(x), "y": "-19", "width": str(width), "height": "15"})
+    append_text(parent, "text", {"class": "arcade-badge-text", "x": str(x + (width / 2)), "y": "-7"}, label)
 
 
 def add_legend_item(parent: ET.Element, swatch_class: str, x: int, label: str) -> None:
-    append_rect(parent, {"class": swatch_class, "x": str(x), "y": "141", "width": "11", "height": "11"})
-    append_text(parent, "text", {"class": "arcade-legend-text", "x": str(x + 18), "y": "150"}, label)
+    append_rect(parent, {"class": swatch_class, "x": str(x), "y": "148", "width": "14", "height": "14"})
+    append_text(parent, "text", {"class": "arcade-legend-text", "x": str(x + 24), "y": "159"}, label)
 
 
 def build_arcade_frame() -> ET.Element:
     frame = ET.Element(svg_tag("g"), {"id": "arcade-frame"})
 
-    append_rect(frame, {"class": "arcade-shell", "x": "-16", "y": "-32", "width": "880", "height": "216"})
-    append_rect(frame, {"class": "arcade-shadow", "x": "-6", "y": "-20", "width": "860", "height": "188"})
-    append_rect(frame, {"class": "arcade-bezel", "x": "-12", "y": "-28", "width": "872", "height": "204"})
-    append_rect(frame, {"class": "arcade-topbar", "x": "-4", "y": "-20", "width": "856", "height": "22"})
+    append_rect(frame, {"class": "arcade-shell", "x": "-16", "y": "-32", "width": "880", "height": "232"})
+    append_rect(frame, {"class": "arcade-shadow", "x": "-6", "y": "-20", "width": "860", "height": "204"})
+    append_rect(frame, {"class": "arcade-bezel", "x": "-12", "y": "-28", "width": "872", "height": "220"})
+    append_rect(frame, {"class": "arcade-topbar", "x": "-4", "y": "-20", "width": "856", "height": "24"})
     append_rect(frame, {"class": "arcade-screen", "x": "-4", "y": "-1", "width": "856", "height": "118"})
     append_rect(frame, {"class": "arcade-meter-track", "x": "0", "y": "119", "width": "848", "height": "7"})
-    append_rect(frame, {"class": "arcade-footer", "x": "-4", "y": "132", "width": "856", "height": "34"})
+    append_rect(frame, {"class": "arcade-footer", "x": "-4", "y": "132", "width": "856", "height": "50"})
 
-    append_text(frame, "text", {"class": "arcade-title", "x": "14", "y": "-6"}, "BYTED-X // PIXEL ARCADE")
-    add_badge(frame, 624, 72, "arcade-badge-pixel", "PIXEL MODE")
-    add_badge(frame, 704, 76, "arcade-badge-auto", "AUTO 12H")
-    add_badge(frame, 788, 52, "arcade-badge-live", "LIVE")
+    append_text(frame, "text", {"class": "arcade-title", "x": "14", "y": "-4"}, "BYTED-X // 像素贡献图")
+    add_badge(frame, 556, 88, "arcade-badge-pixel", "像素模式")
+    add_badge(frame, 654, 112, "arcade-badge-auto", "12小时更新")
+    add_badge(frame, 776, 64, "arcade-badge-live", "动态蛇图")
 
-    append_text(frame, "text", {"class": "arcade-footer-title", "x": "14", "y": "152"}, "活跃度图例")
+    append_text(frame, "text", {"class": "arcade-footer-title", "x": "14", "y": "151"}, "活跃度图例")
 
-    add_legend_item(frame, "arcade-legend-idle", 148, "空白")
-    add_legend_item(frame, "arcade-legend-low", 252, "低活跃")
-    add_legend_item(frame, "arcade-legend-mid", 358, "中活跃")
-    add_legend_item(frame, "arcade-legend-hot", 470, "高活跃")
-    add_legend_item(frame, "arcade-legend-peak", 582, "峰值")
+    add_legend_item(frame, "arcade-legend-idle", 132, "空白")
+    add_legend_item(frame, "arcade-legend-low", 254, "低活跃")
+    add_legend_item(frame, "arcade-legend-mid", 394, "中活跃")
+    add_legend_item(frame, "arcade-legend-hot", 534, "高活跃")
+    add_legend_item(frame, "arcade-legend-peak", 674, "峰值")
 
     return frame
 
@@ -143,9 +143,9 @@ def pixelate_rectangles(root: ET.Element) -> None:
 def transform_svg(input_path: Path, output_path: Path) -> None:
     tree = ET.parse(input_path)
     root = tree.getroot()
-    root.set("viewBox", "-16 -32 880 216")
+    root.set("viewBox", "-16 -32 880 232")
     root.set("width", "880")
-    root.set("height", "216")
+    root.set("height", "232")
 
     style = root.find(svg_tag("style"))
     if style is None:
