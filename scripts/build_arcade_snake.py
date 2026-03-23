@@ -16,14 +16,21 @@ STYLE_APPEND = """
 .arcade-bezel{fill:#141414;stroke:#ff7a00;stroke-width:4;shape-rendering:crispEdges}
 .arcade-topbar{fill:#241712}
 .arcade-screen{fill:#f3efe6;stroke:#161616;stroke-width:4;shape-rendering:crispEdges}
+.arcade-meter-track{fill:#201815;stroke:#ff9f1c;stroke-width:2;shape-rendering:crispEdges}
 .arcade-footer{fill:#161616;stroke:#ff9f1c;stroke-width:2;shape-rendering:crispEdges}
-.arcade-led-green{fill:#5bbe4a;shape-rendering:crispEdges}
-.arcade-led-orange{fill:#ff9f1c;shape-rendering:crispEdges}
-.arcade-led-red{fill:#e5484d;shape-rendering:crispEdges}
-.arcade-chip{fill:#111111;font-family:'Courier New',Consolas,monospace;font-size:9px;font-weight:700;letter-spacing:1.2px}
-.arcade-title{fill:#fff7e6;font-family:'Courier New',Consolas,monospace;font-size:12px;font-weight:700;letter-spacing:1.6px}
-.arcade-status{fill:#f8efe0;font-family:'Courier New',Consolas,monospace;font-size:10px;font-weight:700;letter-spacing:1.3px}
-.arcade-subtle{fill:#d8c8aa;font-family:'Courier New',Consolas,monospace;font-size:9px;font-weight:700;letter-spacing:1px}
+.arcade-badge-pixel{fill:#f3efe6;stroke:#111111;stroke-width:2;shape-rendering:crispEdges}
+.arcade-badge-auto{fill:#ffb347;stroke:#111111;stroke-width:2;shape-rendering:crispEdges}
+.arcade-badge-live{fill:#72df67;stroke:#111111;stroke-width:2;shape-rendering:crispEdges}
+.arcade-badge-text{fill:#111111;font-family:'Courier New',Consolas,monospace;font-size:7px;font-weight:700;letter-spacing:0.5px;text-anchor:middle}
+.arcade-title{fill:#fff7e6;font-family:'Courier New',Consolas,monospace;font-size:12px;font-weight:700;letter-spacing:1px}
+.arcade-footer-title{fill:#fff7e6;font-family:'Courier New',Consolas,monospace;font-size:9px;font-weight:700;letter-spacing:0.8px}
+.arcade-footer-copy{fill:#d8c8aa;font-family:'Courier New',Consolas,monospace;font-size:7.5px;font-weight:700;letter-spacing:0.4px}
+.arcade-legend-text{fill:#f3efe6;font-family:'Courier New',Consolas,monospace;font-size:7px;font-weight:700;letter-spacing:0.35px}
+.arcade-legend-idle{fill:#f3efe6;stroke:#111111;stroke-width:2;shape-rendering:crispEdges}
+.arcade-legend-low{fill:#b7f77a;stroke:#111111;stroke-width:2;shape-rendering:crispEdges}
+.arcade-legend-mid{fill:#5bbe4a;stroke:#111111;stroke-width:2;shape-rendering:crispEdges}
+.arcade-legend-hot{fill:#ff9f1c;stroke:#111111;stroke-width:2;shape-rendering:crispEdges}
+.arcade-legend-peak{fill:#e5484d;stroke:#111111;stroke-width:2;shape-rendering:crispEdges}
 """.strip()
 
 ROOT_REPLACEMENTS = {
@@ -56,26 +63,44 @@ def append_text(parent: ET.Element, tag: str, attrs: dict[str, str], text: str) 
     return element
 
 
+def append_rect(parent: ET.Element, attrs: dict[str, str]) -> ET.Element:
+    return ET.SubElement(parent, svg_tag("rect"), attrs)
+
+
+def add_badge(parent: ET.Element, x: int, width: int, rect_class: str, label: str) -> None:
+    append_rect(parent, {"class": rect_class, "x": str(x), "y": "-17", "width": str(width), "height": "11"})
+    append_text(parent, "text", {"class": "arcade-badge-text", "x": str(x + (width / 2)), "y": "-9"}, label)
+
+
+def add_legend_item(parent: ET.Element, swatch_class: str, x: int, label: str) -> None:
+    append_rect(parent, {"class": swatch_class, "x": str(x), "y": "137", "width": "9", "height": "9"})
+    append_text(parent, "text", {"class": "arcade-legend-text", "x": str(x + 15), "y": "144"}, label)
+
+
 def build_arcade_frame() -> ET.Element:
     frame = ET.Element(svg_tag("g"), {"id": "arcade-frame"})
 
-    ET.SubElement(frame, svg_tag("rect"), {"class": "arcade-shell", "x": "-16", "y": "-32", "width": "880", "height": "192"})
-    ET.SubElement(frame, svg_tag("rect"), {"class": "arcade-shadow", "x": "-6", "y": "-20", "width": "860", "height": "164"})
-    ET.SubElement(frame, svg_tag("rect"), {"class": "arcade-bezel", "x": "-12", "y": "-28", "width": "872", "height": "180"})
-    ET.SubElement(frame, svg_tag("rect"), {"class": "arcade-topbar", "x": "-4", "y": "-20", "width": "856", "height": "18"})
-    ET.SubElement(frame, svg_tag("rect"), {"class": "arcade-screen", "x": "-4", "y": "-2", "width": "856", "height": "116"})
-    ET.SubElement(frame, svg_tag("rect"), {"class": "arcade-footer", "x": "-4", "y": "132", "width": "856", "height": "24"})
-
-    ET.SubElement(frame, svg_tag("rect"), {"class": "arcade-led-orange", "x": "730", "y": "-16", "width": "18", "height": "10"})
-    ET.SubElement(frame, svg_tag("rect"), {"class": "arcade-led-red", "x": "754", "y": "-16", "width": "18", "height": "10"})
-    ET.SubElement(frame, svg_tag("rect"), {"class": "arcade-led-green", "x": "778", "y": "-16", "width": "18", "height": "10"})
+    append_rect(frame, {"class": "arcade-shell", "x": "-16", "y": "-32", "width": "880", "height": "192"})
+    append_rect(frame, {"class": "arcade-shadow", "x": "-6", "y": "-20", "width": "860", "height": "164"})
+    append_rect(frame, {"class": "arcade-bezel", "x": "-12", "y": "-28", "width": "872", "height": "180"})
+    append_rect(frame, {"class": "arcade-topbar", "x": "-4", "y": "-20", "width": "856", "height": "20"})
+    append_rect(frame, {"class": "arcade-screen", "x": "-4", "y": "-1", "width": "856", "height": "120"})
+    append_rect(frame, {"class": "arcade-meter-track", "x": "0", "y": "115", "width": "848", "height": "8"})
+    append_rect(frame, {"class": "arcade-footer", "x": "-4", "y": "130", "width": "856", "height": "24"})
 
     append_text(frame, "text", {"class": "arcade-title", "x": "14", "y": "-7"}, "BYTED-X // PIXEL ARCADE")
-    append_text(frame, "text", {"class": "arcade-chip", "x": "734", "y": "-8"}, "1UP")
-    append_text(frame, "text", {"class": "arcade-chip", "x": "758", "y": "-8"}, "RUN")
-    append_text(frame, "text", {"class": "arcade-chip", "x": "782", "y": "-8"}, "LIVE")
-    append_text(frame, "text", {"class": "arcade-status", "x": "14", "y": "148"}, "CONTRIBUTION SNAKE // AUTO REFRESH 12H")
-    append_text(frame, "text", {"class": "arcade-subtle", "x": "650", "y": "148"}, "BLK WHT GRN ORG RED")
+    add_badge(frame, 694, 46, "arcade-badge-pixel", "PIXEL")
+    add_badge(frame, 746, 42, "arcade-badge-auto", "AUTO")
+    add_badge(frame, 794, 42, "arcade-badge-live", "LIVE")
+
+    append_text(frame, "text", {"class": "arcade-footer-title", "x": "14", "y": "141"}, "Contribution Snake")
+    append_text(frame, "text", {"class": "arcade-footer-copy", "x": "14", "y": "149"}, "GitHub activity replayed as a pixel crawl // refresh every 12h")
+
+    add_legend_item(frame, "arcade-legend-idle", 588, "Idle")
+    add_legend_item(frame, "arcade-legend-low", 637, "Low")
+    add_legend_item(frame, "arcade-legend-mid", 684, "Mid")
+    add_legend_item(frame, "arcade-legend-hot", 731, "Hot")
+    add_legend_item(frame, "arcade-legend-peak", 778, "Peak")
 
     return frame
 
@@ -104,6 +129,10 @@ def pixelate_rectangles(root: ET.Element) -> None:
         if "c" in classes or "u" in classes:
             rect.attrib.pop("rx", None)
             rect.attrib.pop("ry", None)
+
+        if "u" in classes:
+            rect.set("y", "115")
+            rect.set("height", "8")
 
         snake_layers = [name for name in classes if name in SNAKE_LAYER_GEOMETRY]
         if snake_layers:
