@@ -23,8 +23,8 @@ STYLE_APPEND = """
 .arcade-badge-live{fill:#72df67;stroke:#111111;stroke-width:2;shape-rendering:crispEdges}
 .arcade-badge-text{fill:#111111;font-family:'Courier New',Consolas,monospace;font-size:8px;font-weight:700;letter-spacing:0.4px;text-anchor:middle}
 .arcade-title{fill:#fff7e6;font-family:'Courier New',Consolas,monospace;font-size:13px;font-weight:700;letter-spacing:0.9px}
-.arcade-footer-title{fill:#fff7e6;font-family:'Courier New',Consolas,monospace;font-size:10px;font-weight:700;letter-spacing:0.7px}
-.arcade-legend-text{fill:#f3efe6;font-family:'Courier New',Consolas,monospace;font-size:8.2px;font-weight:700;letter-spacing:0.2px}
+.arcade-footer-title{fill:#fff7e6;font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC','Segoe UI',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.2px}
+.arcade-legend-text{fill:#f3efe6;font-family:'Microsoft YaHei','PingFang SC','Noto Sans SC','Segoe UI',sans-serif;font-size:8.8px;font-weight:700;letter-spacing:0}
 .arcade-legend-idle{fill:#f3efe6;stroke:#111111;stroke-width:2;shape-rendering:crispEdges}
 .arcade-legend-low{fill:#b7f77a;stroke:#111111;stroke-width:2;shape-rendering:crispEdges}
 .arcade-legend-mid{fill:#5bbe4a;stroke:#111111;stroke-width:2;shape-rendering:crispEdges}
@@ -92,13 +92,13 @@ def build_arcade_frame() -> ET.Element:
     add_badge(frame, 704, 76, "arcade-badge-auto", "AUTO 12H")
     add_badge(frame, 788, 52, "arcade-badge-live", "LIVE")
 
-    append_text(frame, "text", {"class": "arcade-footer-title", "x": "14", "y": "152"}, "Activity Levels")
+    append_text(frame, "text", {"class": "arcade-footer-title", "x": "14", "y": "152"}, "活跃度图例")
 
-    add_legend_item(frame, "arcade-legend-idle", 148, "Idle")
-    add_legend_item(frame, "arcade-legend-low", 252, "Low")
-    add_legend_item(frame, "arcade-legend-mid", 348, "Mid")
-    add_legend_item(frame, "arcade-legend-hot", 444, "Hot")
-    add_legend_item(frame, "arcade-legend-peak", 540, "Peak")
+    add_legend_item(frame, "arcade-legend-idle", 148, "空白")
+    add_legend_item(frame, "arcade-legend-low", 252, "低活跃")
+    add_legend_item(frame, "arcade-legend-mid", 358, "中活跃")
+    add_legend_item(frame, "arcade-legend-hot", 470, "高活跃")
+    add_legend_item(frame, "arcade-legend-peak", 582, "峰值")
 
     return frame
 

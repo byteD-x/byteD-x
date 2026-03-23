@@ -177,12 +177,6 @@ flowchart LR
   <img src="assets/github-contribution-grid-snake-arcade.svg" alt="byteD-x pixel arcade contribution snake preview" />
 </p>
 
-<p align="center">
-  图例：空白 / 低活跃 / 中活跃 / 高活跃 / 峰值
-  <br />
-  动态版本：<a href="https://raw.githubusercontent.com/byteD-x/byteD-x/output/github-contribution-grid-snake.svg">View live animated snake</a>（每 12 小时刷新）
-</p>
-
 <br>
 
 <p align="center">
