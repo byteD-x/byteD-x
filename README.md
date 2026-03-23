@@ -174,15 +174,11 @@ flowchart LR
 ### Pixel Arcade // Contribution Grid
 
 <p align="center">
-  <code>ARCADE MODE: RUNNING · PIXEL LIGHT · BLK/ORG/RED/WHT/GRN</code>
+  <img src="assets/github-contribution-grid-snake-arcade.svg" alt="byteD-x pixel arcade contribution snake preview" />
 </p>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/byteD-x/byteD-x/output/github-contribution-grid-snake.svg" alt="byteD-x arcade contribution snake" />
-</p>
-
-<p align="center">
-  <code>PRESS START · AUTO REFRESH EVERY 12H</code>
+  <a href="https://raw.githubusercontent.com/byteD-x/byteD-x/output/github-contribution-grid-snake.svg">View live animated snake</a>
 </p>
 
 <br>

@@ -22,12 +22,25 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Generate contribution snake SVG
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Generate raw contribution snake SVG
         uses: Platane/snk@v3.4.1
         with:
           github_user_name: ${{ github.repository_owner }}
           outputs: |
-            dist/github-contribution-grid-snake.svg?color_snake=#111111&color_dots=#F5F5F5,#B7F77A,#5BBE4A,#FF9F1C,#E5484D
+            dist/github-contribution-grid-snake.raw.svg
+
+      - name: Build arcade contribution snake SVG
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/build_arcade_snake.py \
+            dist/github-contribution-grid-snake.raw.svg \
+            dist/github-contribution-grid-snake.svg
 
       - name: Publish SVG to output branch
         shell: bash
