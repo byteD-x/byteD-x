@@ -174,7 +174,7 @@ flowchart LR
 ### 实时贡献动画
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/byteD-x/byteD-x/output/github-contribution-snake.svg" alt="byteD-x contribution snake" />
+  <img src="https://raw.githubusercontent.com/byteD-x/byteD-x/output/github-contribution-grid-snake.svg" alt="byteD-x contribution snake" />
 </p>
 
 <br>
