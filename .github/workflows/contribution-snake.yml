@@ -27,7 +27,7 @@ jobs:
         with:
           github_user_name: ${{ github.repository_owner }}
           outputs: |
-            dist/github-contribution-grid-snake.svg?palette=github-light
+            dist/github-contribution-grid-snake.svg?color_snake=#111111&color_dots=#F5F5F5,#B7F77A,#5BBE4A,#FF9F1C,#E5484D
 
       - name: Publish SVG to output branch
         shell: bash
