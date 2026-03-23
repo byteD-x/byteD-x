@@ -89,6 +89,8 @@ class GenerateSnakeSvgTests(unittest.TestCase):
 
         self.assertIn("<animateMotion", svg)
         self.assertNotIn('calcMode="discrete"', svg)
+        self.assertIn('id="dark-snake-body-clip"', svg)
+        self.assertIn('clip-path="url(#dark-snake-body-clip)"', svg)
         self.assertIn('class="snake-body-window snake-animated"', svg)
         self.assertNotIn('type="translate"', svg)
         self.assertIn('class="snake-head snake-animated"', svg)

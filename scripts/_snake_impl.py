@@ -32,13 +32,13 @@ HIDDEN_FADE = 0.018
 GROWTH_FADE = 0.020
 BASE_SEGMENTS = 5
 MAX_SEGMENTS = 24
-BODY_STROKE_WIDTH = 16.8
-HEAD_LENGTH = 18.0
-HEAD_HEIGHT = 15.6
-HEAD_BRIDGE_WIDTH = 7.2
-HEAD_BRIDGE_HEIGHT = 13.8
-HEAD_BRIDGE_OVERLAP = 4.4
-FOOD_MARKER_SIZE = 4.2
+BODY_STROKE_WIDTH = 14.0
+HEAD_LENGTH = 14.0
+HEAD_HEIGHT = 14.0
+HEAD_BRIDGE_WIDTH = 14.0
+HEAD_BRIDGE_HEIGHT = 14.0
+HEAD_BRIDGE_OVERLAP = 0.0
+FOOD_MARKER_SIZE = 8.0
 SNAKE_SHADOW_STDDEV = 0.7
 GUIDE_PATH_LENGTH = 1000.0
 GUIDE_CORNER_RADIUS = 5.2
@@ -590,6 +590,10 @@ def find_visible_path(
                 continue
 
             direction = (neighbor[0] - current_coord[0], neighbor[1] - current_coord[1])
+            
+            if previous_direction is not None and direction == opposite_direction(previous_direction):
+                continue
+
             is_blank = neighbor not in active_coords
             next_blank_streak = blank_streak + 1 if is_blank else 0
             if next_blank_streak > MAX_VISIBLE_BLANK_RUN:
@@ -864,28 +868,10 @@ def build_guide_path_d(points: Sequence[GridPoint]) -> str:
 
     segments = [f"M {compressed[0].x:.2f} {compressed[0].y:.2f}"]
 
-    for index in range(1, len(compressed) - 1):
-        previous = compressed[index - 1]
+    for index in range(1, len(compressed)):
         current = compressed[index]
-        following = compressed[index + 1]
-        incoming = direction_between(previous, current)
-        outgoing = direction_between(current, following)
+        segments.append(f"L {current.x:.2f} {current.y:.2f}")
 
-        if incoming is None or outgoing is None or incoming == outgoing or incoming == opposite_direction(outgoing):
-            segments.append(f"L {current.x:.2f} {current.y:.2f}")
-            continue
-
-        incoming_distance = math.hypot(current.x - previous.x, current.y - previous.y)
-        outgoing_distance = math.hypot(following.x - current.x, following.y - current.y)
-        radius = min(GUIDE_CORNER_RADIUS, incoming_distance / 2.0, outgoing_distance / 2.0)
-
-        corner_start = (current.x - incoming[0] * radius, current.y - incoming[1] * radius)
-        corner_end = (current.x + outgoing[0] * radius, current.y + outgoing[1] * radius)
-        segments.append(f"L {corner_start[0]:.2f} {corner_start[1]:.2f}")
-        segments.append(f"Q {current.x:.2f} {current.y:.2f} {corner_end[0]:.2f} {corner_end[1]:.2f}")
-
-    last_point = compressed[-1]
-    segments.append(f"L {last_point.x:.2f} {last_point.y:.2f}")
     return " ".join(segments)
 
 
@@ -1074,7 +1060,7 @@ def make_heatmap_cells(
             active_fill = color_for_day(theme, day)
             cell_class = "contribution-cell grid-animated"
             content = [
-                f'<rect class="{cell_class}" x="{x:.1f}" y="{y:.1f}" width="{CELL_SIZE:.0f}" height="{CELL_SIZE:.0f}" rx="3" '
+                f'<rect class="{cell_class}" x="{x:.1f}" y="{y:.1f}" width="{CELL_SIZE:.0f}" height="{CELL_SIZE:.0f}" '
                 f'fill="{theme.empty_fill}" stroke="{theme.empty_stroke}" stroke-width="0.9" />'
             ]
 
@@ -1083,7 +1069,7 @@ def make_heatmap_cells(
                 end = min(start + CLEAR_FADE, 0.999)
                 active_class = "contribution-cell active-cell grid-animated"
                 content = [
-                    f'<rect class="{active_class}" x="{x:.1f}" y="{y:.1f}" width="{CELL_SIZE:.0f}" height="{CELL_SIZE:.0f}" rx="3" '
+                    f'<rect class="{active_class}" x="{x:.1f}" y="{y:.1f}" width="{CELL_SIZE:.0f}" height="{CELL_SIZE:.0f}" '
                     f'fill="{active_fill}" stroke="{active_fill}" stroke-width="0.9">',
                     f'<animate attributeName="fill" values="{active_fill};{active_fill};{theme.empty_fill};{theme.empty_fill};{active_fill}" '
                     f'keyTimes="0;{start:.5f};{end:.5f};0.999;1" dur="{LOOP_DURATION:.1f}s" repeatCount="indefinite" />',
@@ -1104,10 +1090,23 @@ def make_static_grid(theme: Theme, weeks: Sequence[Sequence[ContributionDay]]) -
             x = GRID_LEFT + column * GRID_STEP
             y = GRID_TOP + day.weekday * GRID_STEP
             parts.append(
-                f'<rect x="{x:.1f}" y="{y:.1f}" width="{CELL_SIZE:.0f}" height="{CELL_SIZE:.0f}" rx="3" '
+                f'<rect x="{x:.1f}" y="{y:.1f}" width="{CELL_SIZE:.0f}" height="{CELL_SIZE:.0f}" '
                 f'fill="{theme.empty_fill}" stroke="{theme.empty_stroke}" stroke-width="0.9" />'
             )
     parts.append("</g>")
+    return "".join(parts)
+
+
+def make_body_clip_path(theme: Theme, weeks: Sequence[Sequence[ContributionDay]]) -> str:
+    parts = [f'<clipPath id="{theme.name}-snake-body-clip" clipPathUnits="userSpaceOnUse">']
+    for column, week in enumerate(weeks):
+        for day in week:
+            x = GRID_LEFT + column * GRID_STEP
+            y = GRID_TOP + day.weekday * GRID_STEP
+            parts.append(
+                f'<rect x="{x:.1f}" y="{y:.1f}" width="{CELL_SIZE:.0f}" height="{CELL_SIZE:.0f}" />'
+            )
+    parts.append("</clipPath>")
     return "".join(parts)
 
 
@@ -1138,7 +1137,7 @@ def make_food_svg(
                     f'<animate attributeName="opacity" values="1;1;0;0;1" '
                     f'keyTimes="0;{hide_progress:.5f};{hidden_progress:.5f};0.999;1" '
                     f'dur="{LOOP_DURATION:.1f}s" repeatCount="indefinite" />'
-                    f'<circle cx="0" cy="0" r="{half:.2f}" fill="{theme.food_fill}" stroke="{theme.food_stroke}" stroke-width="0.7" />'
+                    f'<rect x="{-half:.2f}" y="{-half:.2f}" width="{FOOD_MARKER_SIZE:.2f}" height="{FOOD_MARKER_SIZE:.2f}" fill="{theme.food_fill}" stroke="{theme.food_stroke}" stroke-width="0.7" />'
                     f"</g>"
                 )
             )
@@ -1146,23 +1145,14 @@ def make_food_svg(
 
 
 def head_inner_svg(theme: Theme) -> str:
-    bridge_x = -(HEAD_LENGTH / 2.0) - HEAD_BRIDGE_OVERLAP
-    bridge_y = -(HEAD_BRIDGE_HEIGHT / 2.0)
-    head_path = (
-        f"M {-HEAD_LENGTH / 2.0:.2f} {-HEAD_HEIGHT / 2.0:.2f} "
-        f"H {HEAD_LENGTH / 10.0:.2f} "
-        f"L {HEAD_LENGTH / 2.0:.2f} 0 "
-        f"L {HEAD_LENGTH / 10.0:.2f} {HEAD_HEIGHT / 2.0:.2f} "
-        f"H {-HEAD_LENGTH / 2.0:.2f} Z"
-    )
     return (
-        f'<rect x="{bridge_x:.2f}" y="{bridge_y:.2f}" width="{HEAD_BRIDGE_WIDTH:.2f}" '
-        f'height="{HEAD_BRIDGE_HEIGHT:.2f}" rx="3.2" fill="url(#{theme.name}-snake-body)" '
-        f'stroke="{theme.snake_stroke}" stroke-width="1.0" />'
-        f'<path d="{head_path}" fill="url(#{theme.name}-snake-head)" '
-        f'stroke="{theme.head_stroke}" stroke-width="1.0" />'
-        f'<circle cx="-2.10" cy="-2.55" r="0.95" fill="{theme.eye}" />'
-        f'<circle cx="-2.10" cy="2.55" r="0.95" fill="{theme.eye}" />'
+        f'<rect x="7.0" y="-1.0" width="4.0" height="2.0" fill="{theme.food_fill}" />'
+        f'<rect x="11.0" y="-3.0" width="2.0" height="2.0" fill="{theme.food_fill}" />'
+        f'<rect x="11.0" y="1.0" width="2.0" height="2.0" fill="{theme.food_fill}" />'
+        f'<rect x="{-HEAD_LENGTH / 2.0:.2f}" y="{-HEAD_HEIGHT / 2.0:.2f}" width="{HEAD_LENGTH:.2f}" '
+        f'height="{HEAD_HEIGHT:.2f}" fill="url(#{theme.name}-snake-head)" />'
+        f'<rect x="1.0" y="-4.0" width="2.5" height="2.5" fill="{theme.eye}" />'
+        f'<rect x="1.0" y="1.5" width="2.5" height="2.5" fill="{theme.eye}" />'
     )
 
 
@@ -1177,7 +1167,8 @@ def make_body_window(theme: Theme, path: SnakePath) -> str:
         f"{opacity_animation}"
         f'<path class="snake-body-window snake-animated" d="{path.guide_path_d}" pathLength="{GUIDE_PATH_LENGTH:.0f}" '
         f'fill="none" stroke="url(#{theme.name}-snake-body)" stroke-width="{BODY_STROKE_WIDTH:.2f}" '
-        f'stroke-linecap="round" stroke-linejoin="round" '
+        f'clip-path="url(#{theme.name}-snake-body-clip)" '
+        f'stroke-linecap="square" stroke-linejoin="miter" '
         f'stroke-dasharray="{initial_dash:.2f} {GUIDE_PATH_LENGTH:.2f}" '
         f'stroke-dashoffset="{GUIDE_PATH_LENGTH:.2f}" filter="url(#{theme.name}-snake-shadow)">'
         f'<animate attributeName="stroke-dashoffset" values="{GUIDE_PATH_LENGTH:.2f};0" '
@@ -1218,7 +1209,8 @@ def make_static_snapshot(theme: Theme, path: SnakePath) -> str:
         f'<g class="snake-static">'
         f'<path d="{path.guide_path_d}" pathLength="{GUIDE_PATH_LENGTH:.0f}" fill="none" '
         f'stroke="url(#{theme.name}-snake-body)" stroke-width="{BODY_STROKE_WIDTH:.2f}" '
-        f'stroke-linecap="round" stroke-linejoin="round" '
+        f'clip-path="url(#{theme.name}-snake-body-clip)" '
+        f'stroke-linecap="square" stroke-linejoin="miter" '
         f'stroke-dasharray="{dash_length:.2f} {GUIDE_PATH_LENGTH:.2f}" '
         f'stroke-dashoffset="{dash_offset:.2f}" filter="url(#{theme.name}-snake-shadow)" />'
         f'<g transform="translate({path.final_head_point.x:.2f} {path.final_head_point.y:.2f}) rotate({path.final_head_angle:.1f})">'
@@ -1288,6 +1280,7 @@ def render_svg(user: str, theme: Theme, total_contributions: int, weeks: list[li
         f'<feDropShadow dx="0" dy="0" stdDeviation="{SNAKE_SHADOW_STDDEV:.1f}" '
         f'flood-color="{theme.shadow_color}" flood-opacity="0.18" />'
         f"</filter>"
+        f"{make_body_clip_path(theme, weeks)}"
         f'<clipPath id="{theme.name}-grid-clip">'
         f'<rect x="{GRID_LEFT + GRID_CLIP_INSET:.1f}" y="{GRID_TOP + GRID_CLIP_INSET:.1f}" '
         f'width="{grid_width - GRID_CLIP_INSET * 2:.1f}" height="{GRID_HEIGHT - GRID_CLIP_INSET * 2:.1f}" rx="6" />'
