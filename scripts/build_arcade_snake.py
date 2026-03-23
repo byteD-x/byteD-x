@@ -21,11 +21,10 @@ STYLE_APPEND = """
 .arcade-badge-pixel{fill:#f3efe6;stroke:#111111;stroke-width:2;shape-rendering:crispEdges}
 .arcade-badge-auto{fill:#ffb347;stroke:#111111;stroke-width:2;shape-rendering:crispEdges}
 .arcade-badge-live{fill:#72df67;stroke:#111111;stroke-width:2;shape-rendering:crispEdges}
-.arcade-badge-text{fill:#111111;font-family:'Courier New',Consolas,monospace;font-size:7px;font-weight:700;letter-spacing:0.5px;text-anchor:middle}
-.arcade-title{fill:#fff7e6;font-family:'Courier New',Consolas,monospace;font-size:12px;font-weight:700;letter-spacing:1px}
-.arcade-footer-title{fill:#fff7e6;font-family:'Courier New',Consolas,monospace;font-size:9px;font-weight:700;letter-spacing:0.8px}
-.arcade-footer-copy{fill:#d8c8aa;font-family:'Courier New',Consolas,monospace;font-size:7.5px;font-weight:700;letter-spacing:0.4px}
-.arcade-legend-text{fill:#f3efe6;font-family:'Courier New',Consolas,monospace;font-size:7px;font-weight:700;letter-spacing:0.35px}
+.arcade-badge-text{fill:#111111;font-family:'Courier New',Consolas,monospace;font-size:8px;font-weight:700;letter-spacing:0.4px;text-anchor:middle}
+.arcade-title{fill:#fff7e6;font-family:'Courier New',Consolas,monospace;font-size:13px;font-weight:700;letter-spacing:0.9px}
+.arcade-footer-title{fill:#fff7e6;font-family:'Courier New',Consolas,monospace;font-size:10px;font-weight:700;letter-spacing:0.7px}
+.arcade-legend-text{fill:#f3efe6;font-family:'Courier New',Consolas,monospace;font-size:8.2px;font-weight:700;letter-spacing:0.2px}
 .arcade-legend-idle{fill:#f3efe6;stroke:#111111;stroke-width:2;shape-rendering:crispEdges}
 .arcade-legend-low{fill:#b7f77a;stroke:#111111;stroke-width:2;shape-rendering:crispEdges}
 .arcade-legend-mid{fill:#5bbe4a;stroke:#111111;stroke-width:2;shape-rendering:crispEdges}
@@ -68,39 +67,38 @@ def append_rect(parent: ET.Element, attrs: dict[str, str]) -> ET.Element:
 
 
 def add_badge(parent: ET.Element, x: int, width: int, rect_class: str, label: str) -> None:
-    append_rect(parent, {"class": rect_class, "x": str(x), "y": "-17", "width": str(width), "height": "11"})
-    append_text(parent, "text", {"class": "arcade-badge-text", "x": str(x + (width / 2)), "y": "-9"}, label)
+    append_rect(parent, {"class": rect_class, "x": str(x), "y": "-18", "width": str(width), "height": "13"})
+    append_text(parent, "text", {"class": "arcade-badge-text", "x": str(x + (width / 2)), "y": "-8"}, label)
 
 
 def add_legend_item(parent: ET.Element, swatch_class: str, x: int, label: str) -> None:
-    append_rect(parent, {"class": swatch_class, "x": str(x), "y": "137", "width": "9", "height": "9"})
-    append_text(parent, "text", {"class": "arcade-legend-text", "x": str(x + 15), "y": "144"}, label)
+    append_rect(parent, {"class": swatch_class, "x": str(x), "y": "141", "width": "11", "height": "11"})
+    append_text(parent, "text", {"class": "arcade-legend-text", "x": str(x + 18), "y": "150"}, label)
 
 
 def build_arcade_frame() -> ET.Element:
     frame = ET.Element(svg_tag("g"), {"id": "arcade-frame"})
 
-    append_rect(frame, {"class": "arcade-shell", "x": "-16", "y": "-32", "width": "880", "height": "192"})
-    append_rect(frame, {"class": "arcade-shadow", "x": "-6", "y": "-20", "width": "860", "height": "164"})
-    append_rect(frame, {"class": "arcade-bezel", "x": "-12", "y": "-28", "width": "872", "height": "180"})
-    append_rect(frame, {"class": "arcade-topbar", "x": "-4", "y": "-20", "width": "856", "height": "20"})
-    append_rect(frame, {"class": "arcade-screen", "x": "-4", "y": "-1", "width": "856", "height": "120"})
-    append_rect(frame, {"class": "arcade-meter-track", "x": "0", "y": "115", "width": "848", "height": "8"})
-    append_rect(frame, {"class": "arcade-footer", "x": "-4", "y": "130", "width": "856", "height": "24"})
+    append_rect(frame, {"class": "arcade-shell", "x": "-16", "y": "-32", "width": "880", "height": "216"})
+    append_rect(frame, {"class": "arcade-shadow", "x": "-6", "y": "-20", "width": "860", "height": "188"})
+    append_rect(frame, {"class": "arcade-bezel", "x": "-12", "y": "-28", "width": "872", "height": "204"})
+    append_rect(frame, {"class": "arcade-topbar", "x": "-4", "y": "-20", "width": "856", "height": "22"})
+    append_rect(frame, {"class": "arcade-screen", "x": "-4", "y": "-1", "width": "856", "height": "118"})
+    append_rect(frame, {"class": "arcade-meter-track", "x": "0", "y": "119", "width": "848", "height": "7"})
+    append_rect(frame, {"class": "arcade-footer", "x": "-4", "y": "132", "width": "856", "height": "34"})
 
-    append_text(frame, "text", {"class": "arcade-title", "x": "14", "y": "-7"}, "BYTED-X // PIXEL ARCADE")
-    add_badge(frame, 694, 46, "arcade-badge-pixel", "PIXEL")
-    add_badge(frame, 746, 42, "arcade-badge-auto", "AUTO")
-    add_badge(frame, 794, 42, "arcade-badge-live", "LIVE")
+    append_text(frame, "text", {"class": "arcade-title", "x": "14", "y": "-6"}, "BYTED-X // PIXEL ARCADE")
+    add_badge(frame, 624, 72, "arcade-badge-pixel", "PIXEL MODE")
+    add_badge(frame, 704, 76, "arcade-badge-auto", "AUTO 12H")
+    add_badge(frame, 788, 52, "arcade-badge-live", "LIVE")
 
-    append_text(frame, "text", {"class": "arcade-footer-title", "x": "14", "y": "141"}, "Contribution Snake")
-    append_text(frame, "text", {"class": "arcade-footer-copy", "x": "14", "y": "149"}, "GitHub activity replayed as a pixel crawl // refresh every 12h")
+    append_text(frame, "text", {"class": "arcade-footer-title", "x": "14", "y": "152"}, "Activity Levels")
 
-    add_legend_item(frame, "arcade-legend-idle", 588, "Idle")
-    add_legend_item(frame, "arcade-legend-low", 637, "Low")
-    add_legend_item(frame, "arcade-legend-mid", 684, "Mid")
-    add_legend_item(frame, "arcade-legend-hot", 731, "Hot")
-    add_legend_item(frame, "arcade-legend-peak", 778, "Peak")
+    add_legend_item(frame, "arcade-legend-idle", 148, "Idle")
+    add_legend_item(frame, "arcade-legend-low", 252, "Low")
+    add_legend_item(frame, "arcade-legend-mid", 348, "Mid")
+    add_legend_item(frame, "arcade-legend-hot", 444, "Hot")
+    add_legend_item(frame, "arcade-legend-peak", 540, "Peak")
 
     return frame
 
@@ -131,8 +129,8 @@ def pixelate_rectangles(root: ET.Element) -> None:
             rect.attrib.pop("ry", None)
 
         if "u" in classes:
-            rect.set("y", "115")
-            rect.set("height", "8")
+            rect.set("y", "119")
+            rect.set("height", "7")
 
         snake_layers = [name for name in classes if name in SNAKE_LAYER_GEOMETRY]
         if snake_layers:
@@ -145,6 +143,9 @@ def pixelate_rectangles(root: ET.Element) -> None:
 def transform_svg(input_path: Path, output_path: Path) -> None:
     tree = ET.parse(input_path)
     root = tree.getroot()
+    root.set("viewBox", "-16 -32 880 216")
+    root.set("width", "880")
+    root.set("height", "216")
 
     style = root.find(svg_tag("style"))
     if style is None:
