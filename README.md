@@ -1,5 +1,11 @@
+<h1 align="center">byteD-x</h1>
+
 <p align="center">
-  <img src="./assets/profile-header.svg" width="100%" alt="byteD-x 主页头图" />
+  <strong>AI Systems / RAG / Agent Engineering / Backend & Full Stack</strong>
+</p>
+
+<p align="center">
+  构建可恢复、可追踪、可评测的 AI 应用与工程基础设施。
 </p>
 
 <p align="center">
@@ -15,12 +21,6 @@
   <img src="https://img.shields.io/badge/WeChat-w2041487752-18181B?style=for-the-badge&logo=wechat&logoColor=60A5FA" alt="微信" />
   <img src="https://img.shields.io/badge/Status-Available-18181B?style=for-the-badge&logo=statuspage&logoColor=34D399" alt="状态" />
 </p>
-
-<br>
-
-<div align="center">
-  <img src="./assets/profile-typing.svg" alt="byteD-x 简介横幅" style="max-width: 100%; height: auto;" />
-</div>
 
 <br>
 
@@ -168,6 +168,14 @@ flowchart LR
 <br>
 
 </div>
+
+<br>
+
+### 实时贡献动画
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/byteD-x/byteD-x/output/github-contribution-snake.svg" alt="byteD-x contribution snake" />
+</p>
 
 <br>
 

@@ -1,0 +1,56 @@
+name: Refresh Contribution Snake
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "43 */12 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: contribution-snake
+  cancel-in-progress: true
+
+jobs:
+  generate-snake:
+    name: Generate and publish contribution snake
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate contribution snake SVG
+        uses: Platane/snk@v3.4.1
+        with:
+          github_user_name: ${{ github.repository_owner }}
+          outputs: |
+            dist/github-contribution-snake.svg?palette=github-light
+
+      - name: Publish SVG to output branch
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git fetch origin output:output
+          git worktree add output-branch output
+
+          rm -f output-branch/github-contribution-grid-snake.svg
+          rm -f output-branch/github-contribution-grid-snake-dark.svg
+          rm -f output-branch/github-contribution-snake.svg
+          cp dist/github-contribution-snake.svg output-branch/github-contribution-snake.svg
+
+          git -C output-branch add -A
+
+          if git -C output-branch diff --cached --quiet; then
+            echo "No snake changes to publish."
+            exit 0
+          fi
+
+          git -C output-branch commit -m "docs(readme): refresh contribution snake"
+          git -C output-branch push origin HEAD:output
