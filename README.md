@@ -162,8 +162,8 @@ flowchart LR
 
 <div align="center">
 
-<img src="https://github-readme-stats.vercel.app/api?username=byteD-x&show_icons=true&theme=transparent&hide_border=true&title_color=2563EB&text_color=52525B&icon_color=2563EB" width="49%" />
-<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=byteD-x&layout=compact&theme=transparent&hide_border=true&title_color=2563EB&text_color=52525B" width="49%" />
+<img src="https://github-profile-summary-cards.vercel.app/api/cards/stats?username=byteD-x&theme=github" width="49%" />
+<img src="https://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=byteD-x&theme=github" width="49%" />
 
 <br>
 
