@@ -93,40 +93,54 @@ flowchart LR
 
 ### 代表项目
 
+<p style="font-size: 13px; color: #52525B;">
+  以下内容由 GitHub 实时仓库数据自动生成，当前按星标、分叉和最近活跃度综合排序；描述信息每 15 分钟刷新一次，星标、分叉和最近提交通过动态徽章实时同步。
+</p>
+
+<!-- representative-projects:start -->
 <table width="100%" style="border-collapse: collapse; border: none;">
   <tr>
     <td width="50%" valign="top" style="border: 1px solid #E4E4E7; padding: 16px;">
-      <h4><a href="https://github.com/byteD-x/customer-ai-runtime" style="color: #2563EB; text-decoration: none;">customer-ai-runtime</a></h4>
-      <p style="font-size: 13px; color: #52525B;">企业级智能客服运行时。支持文本、语音、RTC 多渠道接入与人工协同接管。</p>
-      <code>Python</code> <code>LangGraph</code> <code>Qdrant</code>
+      <h4><a href="https://github.com/byteD-x/wechat-bot" style="color: #2563EB; text-decoration: none;">wechat-bot</a></h4>
+      <p style="font-size: 13px; color: #52525B;">基于 wxauto 的微信 PC 端 AI 自动回复机器人，支持多模型 API 与各种oauth（OpenAI/DeepSeek/豆包等），支持各种coding plan (Kimi，GLM，codex team等)，内置记忆、情感识别与 Electron 可视化界面。</p>
+      <code>Python</code>
       <br><br>
-      <img src="https://img.shields.io/github/stars/byteD-x/customer-ai-runtime?style=flat-square&color=2563EB&labelColor=18181B" />
+      <img src="https://img.shields.io/github/stars/byteD-x/wechat-bot?style=flat-square&color=2563EB&labelColor=18181B" alt="wechat-bot stars" />
+      <img src="https://img.shields.io/github/forks/byteD-x/wechat-bot?style=flat-square&color=60A5FA&labelColor=18181B" alt="wechat-bot forks" />
+      <img src="https://img.shields.io/github/last-commit/byteD-x/wechat-bot?style=flat-square&color=34D399&labelColor=18181B" alt="wechat-bot last commit" />
     </td>
     <td width="50%" valign="top" style="border: 1px solid #E4E4E7; padding: 16px;">
-      <h4><a href="https://github.com/byteD-x/rag-qa-system" style="color: #2563EB; text-decoration: none;">rag-qa-system</a></h4>
-      <p style="font-size: 13px; color: #52525B;">企业知识问答平台。多源文档接入、混合检索、答案引用溯源与评测回归。</p>
-      <code>FastAPI</code> <code>PostgreSQL</code> <code>Vue 3</code>
+      <h4><a href="https://github.com/byteD-x/easyCloudPan" style="color: #2563EB; text-decoration: none;">easyCloudPan</a></h4>
+      <p style="font-size: 13px; color: #52525B;">高性能前后端分离网盘系统，支持 Vue 3 和 React 19 双前端，基于 Java 21 虚拟线程和 Spring Boot 3.x 构建。</p>
+      <code>Java</code>
       <br><br>
-      <img src="https://img.shields.io/github/stars/byteD-x/rag-qa-system?style=flat-square&color=2563EB&labelColor=18181B" />
+      <img src="https://img.shields.io/github/stars/byteD-x/easyCloudPan?style=flat-square&color=2563EB&labelColor=18181B" alt="easyCloudPan stars" />
+      <img src="https://img.shields.io/github/forks/byteD-x/easyCloudPan?style=flat-square&color=60A5FA&labelColor=18181B" alt="easyCloudPan forks" />
+      <img src="https://img.shields.io/github/last-commit/byteD-x/easyCloudPan?style=flat-square&color=34D399&labelColor=18181B" alt="easyCloudPan last commit" />
     </td>
   </tr>
   <tr>
     <td width="50%" valign="top" style="border: 1px solid #E4E4E7; padding: 16px;">
-      <h4><a href="https://github.com/byteD-x/wechat-bot" style="color: #2563EB; text-decoration: none;">wechat-bot</a></h4>
-      <p style="font-size: 13px; color: #52525B;">微信 PC 端 AI 助手。包含长期记忆、多模型路由、情感识别与管理后台。</p>
-      <code>AsyncIO</code> <code>Electron</code> <code>wxauto</code>
+      <h4><a href="https://github.com/byteD-x/rag-qa-system" style="color: #2563EB; text-decoration: none;">rag-qa-system</a></h4>
+      <p style="font-size: 13px; color: #52525B;">企业级 RAG 问答系统 | 多源知识连接器 | 分片审查 | 检索调试 | 平台治理能力</p>
+      <code>Python</code>
       <br><br>
-      <img src="https://img.shields.io/github/stars/byteD-x/wechat-bot?style=flat-square&color=2563EB&labelColor=18181B" />
+      <img src="https://img.shields.io/github/stars/byteD-x/rag-qa-system?style=flat-square&color=2563EB&labelColor=18181B" alt="rag-qa-system stars" />
+      <img src="https://img.shields.io/github/forks/byteD-x/rag-qa-system?style=flat-square&color=60A5FA&labelColor=18181B" alt="rag-qa-system forks" />
+      <img src="https://img.shields.io/github/last-commit/byteD-x/rag-qa-system?style=flat-square&color=34D399&labelColor=18181B" alt="rag-qa-system last commit" />
     </td>
     <td width="50%" valign="top" style="border: 1px solid #E4E4E7; padding: 16px;">
-      <h4><a href="https://github.com/byteD-x/easyCloudPan" style="color: #2563EB; text-decoration: none;">easyCloudPan</a></h4>
-      <p style="font-size: 13px; color: #52525B;">企业级网盘系统。多租户隔离、完整权限体系与高性能分片上传。</p>
-      <code>Spring Boot</code> <code>React 19</code>
+      <h4><a href="https://github.com/byteD-x/customer-ai-runtime" style="color: #2563EB; text-decoration: none;">customer-ai-runtime</a></h4>
+      <p style="font-size: 13px; color: #52525B;">企业级智能客服引擎，支持 RAG 知识增强、AI/人工协同、模块化接入。提供文本/语音/RTC 多渠道客服能力，可作为 FastAPI 子应用无缝集成到现有业务系统。</p>
+      <code>Python</code>
       <br><br>
-      <img src="https://img.shields.io/github/stars/byteD-x/easyCloudPan?style=flat-square&color=2563EB&labelColor=18181B" />
+      <img src="https://img.shields.io/github/stars/byteD-x/customer-ai-runtime?style=flat-square&color=2563EB&labelColor=18181B" alt="customer-ai-runtime stars" />
+      <img src="https://img.shields.io/github/forks/byteD-x/customer-ai-runtime?style=flat-square&color=60A5FA&labelColor=18181B" alt="customer-ai-runtime forks" />
+      <img src="https://img.shields.io/github/last-commit/byteD-x/customer-ai-runtime?style=flat-square&color=34D399&labelColor=18181B" alt="customer-ai-runtime last commit" />
     </td>
   </tr>
 </table>
+<!-- representative-projects:end -->
 
 ### 履历与产出
 

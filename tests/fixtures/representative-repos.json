@@ -1,0 +1,77 @@
+[
+  {
+    "name": "wechat-bot",
+    "html_url": "https://github.com/byteD-x/wechat-bot",
+    "description": "基于 wxauto 的微信 PC 端 AI 自动回复机器人，支持多模型 API 与各种oauth（OpenAI/DeepSeek/豆包等），支持各种coding plan (Kimi，GLM，codex team等)，内置记忆、情感识别与 Electron 可视化界面。",
+    "language": "Python",
+    "stargazers_count": 20,
+    "forks_count": 3,
+    "pushed_at": "2026-04-05T13:01:21Z",
+    "fork": false,
+    "archived": false,
+    "size": 1024,
+    "owner": {
+      "login": "byteD-x"
+    }
+  },
+  {
+    "name": "easyCloudPan",
+    "html_url": "https://github.com/byteD-x/easyCloudPan",
+    "description": "高性能前后端分离网盘系统，支持 Vue 3 和 React 19 双前端，基于 Java 21 虚拟线程和 Spring Boot 3.x 构建。",
+    "language": "Java",
+    "stargazers_count": 5,
+    "forks_count": 0,
+    "pushed_at": "2026-03-12T16:03:18Z",
+    "fork": false,
+    "archived": false,
+    "size": 900,
+    "owner": {
+      "login": "byteD-x"
+    }
+  },
+  {
+    "name": "rag-qa-system",
+    "html_url": "https://github.com/byteD-x/rag-qa-system",
+    "description": "企业级 RAG 问答系统 | 多源知识连接器 | 分片审查 | 检索调试 | 平台治理能力",
+    "language": "Python",
+    "stargazers_count": 2,
+    "forks_count": 0,
+    "pushed_at": "2026-03-22T11:18:47Z",
+    "fork": false,
+    "archived": false,
+    "size": 780,
+    "owner": {
+      "login": "byteD-x"
+    }
+  },
+  {
+    "name": "customer-ai-runtime",
+    "html_url": "https://github.com/byteD-x/customer-ai-runtime",
+    "description": "企业级智能客服引擎，支持 RAG 知识增强、AI/人工协同、模块化接入。提供文本/语音/RTC 多渠道客服能力，可作为 FastAPI 子应用无缝集成到现有业务系统。",
+    "language": "Python",
+    "stargazers_count": 2,
+    "forks_count": 0,
+    "pushed_at": "2026-03-15T14:39:14Z",
+    "fork": false,
+    "archived": false,
+    "size": 760,
+    "owner": {
+      "login": "byteD-x"
+    }
+  },
+  {
+    "name": "byteD-x",
+    "html_url": "https://github.com/byteD-x/byteD-x",
+    "description": null,
+    "language": "Python",
+    "stargazers_count": 0,
+    "forks_count": 0,
+    "pushed_at": "2026-03-28T07:45:54Z",
+    "fork": false,
+    "archived": false,
+    "size": 20,
+    "owner": {
+      "login": "byteD-x"
+    }
+  }
+]

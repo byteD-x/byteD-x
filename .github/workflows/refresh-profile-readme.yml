@@ -1,0 +1,47 @@
+name: Refresh Profile README
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/15 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-profile-readme
+  cancel-in-progress: true
+
+jobs:
+  refresh-readme:
+    name: Refresh representative projects section
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Refresh representative projects
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PROFILE_USERNAME: byteD-x
+          REPRESENTATIVE_REPOS_LIMIT: 4
+        run: python scripts/refresh_representative_projects.py --readme README.md
+
+      - name: Commit README changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet README.md; then
+            echo "README 无变化，无需提交。"
+            exit 0
+          fi
+
+          git add README.md
+          git commit -m "docs(readme): 刷新代表项目实时数据"
+          git push
